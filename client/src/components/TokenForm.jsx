@@ -1,21 +1,22 @@
 import React, { useState } from "react";
 import { TextField, Button, Box, Typography, Paper } from "@mui/material";
-import { useLocation } from "react-router-dom";
-import { useMetaMask } from "../contexts/MetaMaskContext";
 import Navbar from "./Navbar";
+import { useMetaMask } from "../contexts/MetaMaskContext";
 
 const TokenForm = () => {
   const { contract, account } = useMetaMask();
 
-  // const location = useLocation();
-  // const { contract, account } = location.state || {}; // Extract from navigation state
-
   const [formData, setFormData] = useState({
     name: "",
-    course: "",
     institution: "",
-    ipfsId: "",
+    credentialID: "",
+    credentialTitle: "",
+    credentialType: "",
+    grade: "",
+    ipfsHash: "",
+    recipientPublicKey: "",
   });
+
   const [message, setMessage] = useState("");
 
   const handleChange = (e) => {
@@ -33,25 +34,32 @@ const TokenForm = () => {
     try {
       setMessage("Issuing token...");
       const tx = await contract.issueToken(
-        formData.name,
-        formData.course,
-        formData.institution,
-        formData.ipfsId
+        account, // Issuer Public Key (connected account)
+        formData.recipientPublicKey, // Recipient Public Key
+        formData.name, // Name
+        formData.credentialID, // Credential ID
+        formData.credentialTitle, // Credential Title
+        formData.credentialType, // Credential Type
+        formData.grade, // Grade
+        formData.institution, // Institution
+        formData.ipfsHash // IPFS Hash
       );
       await tx.wait();
       setMessage("Token issued successfully!");
+      setFormData({
+        name: "",
+        institution: "",
+        credentialID: "",
+        credentialTitle: "",
+        credentialType: "",
+        grade: "",
+        ipfsHash: "",
+        recipientPublicKey: "",
+      });
     } catch (error) {
       console.error("Error issuing token:", error);
       setMessage("Failed to issue token.");
     }
-
-    console.log("Form Data:", formData);
-    setFormData({
-      name: "",
-      course: "",
-      institution: "",
-      ipfsId: "",
-    });
   };
 
   return (
@@ -72,7 +80,7 @@ const TokenForm = () => {
           sx={{
             padding: "30px",
             width: "100%",
-            maxWidth: "500px",
+            maxWidth: "600px",
             textAlign: "center",
           }}
         >
@@ -80,22 +88,22 @@ const TokenForm = () => {
             Issue Token
           </Typography>
           <Typography variant="body1" gutterBottom>
-            Connected Account: {account}
+            Connected Account (Issuer): {account}
           </Typography>
           <form onSubmit={handleSubmit}>
             <TextField
-              label="Student Name"
-              name="name"
-              value={formData.name}
+              label="Recipient Public Key"
+              name="recipientPublicKey"
+              value={formData.recipientPublicKey}
               onChange={handleChange}
               fullWidth
               required
               margin="normal"
             />
             <TextField
-              label="Course"
-              name="course"
-              value={formData.course}
+              label="Student Name"
+              name="name"
+              value={formData.name}
               onChange={handleChange}
               fullWidth
               required
@@ -111,9 +119,45 @@ const TokenForm = () => {
               margin="normal"
             />
             <TextField
-              label="IPFS ID"
-              name="ipfsId"
-              value={formData.ipfsId}
+              label="Credential ID"
+              name="credentialID"
+              value={formData.credentialID}
+              onChange={handleChange}
+              fullWidth
+              required
+              margin="normal"
+            />
+            <TextField
+              label="Credential Title"
+              name="credentialTitle"
+              value={formData.credentialTitle}
+              onChange={handleChange}
+              fullWidth
+              required
+              margin="normal"
+            />
+            <TextField
+              label="Credential Type"
+              name="credentialType"
+              value={formData.credentialType}
+              onChange={handleChange}
+              fullWidth
+              required
+              margin="normal"
+            />
+            <TextField
+              label="Grade"
+              name="grade"
+              value={formData.grade}
+              onChange={handleChange}
+              fullWidth
+              required
+              margin="normal"
+            />
+            <TextField
+              label="IPFS Hash"
+              name="ipfsHash"
+              value={formData.ipfsHash}
               onChange={handleChange}
               fullWidth
               required
@@ -138,7 +182,10 @@ const TokenForm = () => {
           {message && (
             <Typography
               variant="body1"
-              sx={{ color: "green", marginTop: "20px" }}
+              sx={{
+                color: message.includes("successfully") ? "green" : "red",
+                marginTop: "20px",
+              }}
             >
               {message}
             </Typography>

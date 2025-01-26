@@ -1,5 +1,5 @@
 // Import dependencies
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import {
@@ -11,13 +11,17 @@ import {
 } from "@mui/material";
 import { useMetaMask } from "../contexts/MetaMaskContext";
 import Navbar from "./Navbar";
+import { UserContext } from "../contexts/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const DocumentDetailPage = () => {
+  const navigate = useNavigate();
   const { id } = useParams(); // Fetch document ID from URL params
   const [document, setDocument] = useState(null);
   const [loading, setLoading] = useState(true); // Loading state
   const [generating, setGenerating] = useState(false); // Generating IPFS CID state
   const [submitting, setSubmitting] = useState(false); // Submitting to blockchain state
+  const { user, logoutUser } = useContext(UserContext);
 
   const { contract, account } = useMetaMask(); // MetaMask context
 
@@ -60,19 +64,65 @@ const DocumentDetailPage = () => {
 
     setSubmitting(true);
     try {
+      // Step 1: Submit to Blockchain
       const tx = await contract.issueToken(
+        user.publicKey,
+        document.publicKey,
         document.name,
+        document.credentialID,
         document.course,
+        document.credentialType,
+        document.grade,
         document.institution,
         document.ipfsCID
       );
+
       await tx.wait();
-      alert("Document submitted to blockchain successfully!");
+      console.log("Transaction mined successfully!");
+
+      // Step 2: Fetch the latest tokenCount
+      const tokenCount = await contract.tokenCount();
+      const tokenId = tokenCount.toString();
+      console.log("Token ID:", tokenId);
+
+      // Step 3: Validate Document ID
+      if (!document._id) {
+        throw new Error("Document ID is invalid or missing.");
+      }
+
+      // Step 4: Delete the Document from the Database using Axios
+      console.log("Deleting document with ID:", document._id);
+      const deleteResponse = await axios.delete(
+        `http://localhost:5000/api/documents/${document._id}`
+      );
+      console.log("Document deleted successfully:", deleteResponse.data);
+
+      // Step 5: Upload New Token to the Database using Axios
+      const tokenData = {
+        tokenId: tokenId,
+        credentialTitle: document.course,
+        recipientPublicKey: document.publicKey,
+      };
+      console.log("Uploading token data:", tokenData);
+
+      const uploadResponse = await axios.post(
+        `http://localhost:5000/api/tokens`,
+        tokenData
+      );
+      console.log("Token data uploaded successfully:", uploadResponse.data);
+
+      alert(
+        "Document submitted to blockchain, deleted from database, and token saved successfully!"
+      );
     } catch (error) {
-      console.error("Error submitting to blockchain:", error);
-      alert("Failed to submit document to blockchain.");
+      console.error("Error in submitToBlockchain:", error);
+      alert(
+        error.message || "Failed to complete the process. Please try again."
+      );
+    } finally {
+      setSubmitting(false);
     }
-    setSubmitting(false);
+    navigate("/viewAll");
   };
 
   if (loading) {
@@ -153,6 +203,18 @@ const DocumentDetailPage = () => {
           </Typography>
           <Typography variant="body1" gutterBottom>
             <strong>Institution:</strong> {document.institution}
+          </Typography>
+          <Typography variant="body1" gutterBottom>
+            <strong>CredentialID:</strong> {document.credentialID}
+          </Typography>
+          <Typography variant="body1" gutterBottom>
+            <strong>Credential Type:</strong> {document.credentialType}
+          </Typography>
+          <Typography variant="body1" gutterBottom>
+            <strong>Grade:</strong> {document.grade}
+          </Typography>
+          <Typography variant="body1" gutterBottom>
+            <strong>User Public Key:</strong> {document.publicKey}
           </Typography>
           <Typography variant="body1" gutterBottom>
             <strong>Filename:</strong> {document.filename}

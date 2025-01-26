@@ -1,21 +1,26 @@
 import React, { useContext } from "react";
 import Navbar from "./components/Navbar";
-import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useMetaMask } from "./contexts/MetaMaskContext";
+import { Box, Typography, Button, AppBar, Toolbar } from "@mui/material";
 
 function Home() {
   const { account } = useMetaMask;
   const navigate = useNavigate();
 
   const handleIssueCertificate = () => {
-    navigate("/issue");
+    navigate("/login");
   };
   return (
     <div>
-      <Navbar />
+      <AppBar position="static" sx={{ backgroundColor: "#676F54" }}>
+        <Toolbar>
+          <Typography variant="h6" sx={{ flexGrow: 1 }}>
+            Dr. FANS
+          </Typography>
+        </Toolbar>
+      </AppBar>
       <div style={{ padding: "20px", textAlign: "center" }}>
         <h1>Welcome to Dr.FANS</h1>
         <p>Your all in one credentialing solution</p>
@@ -42,12 +47,12 @@ function Home() {
             width: "200px",
           }}
         >
-          Issue Certificate
+          Login
         </Button>
 
         <Button
           variant="contained"
-          onClick={() => navigate("/verify")}
+          onClick={() => navigate("/signup")}
           sx={{
             backgroundColor: "#9CC69B", // Celadon
             color: "#FFFFFF",
@@ -57,7 +62,7 @@ function Home() {
             width: "200px",
           }}
         >
-          Verify Certificate
+          Signup
         </Button>
       </Box>
     </div>

@@ -54,18 +54,18 @@ const Navbar = () => {
           Home
         </Button>
         <Button
-          onClick={() => navigate("/DocUp")}
+          onClick={() => navigate("*")}
           color="inherit"
           sx={{ color: "#BDE4A8" }}
         >
-          Student Home
+          Request Course Exemption
         </Button>
         <Button
-          onClick={() => navigate("/viewAll")}
+          onClick={() => navigate("/verify")}
           color="inherit"
           sx={{ color: "#BDE4A8" }}
         >
-          View all documents
+          Get Token Information
         </Button>
         <Button
           variant="contained"

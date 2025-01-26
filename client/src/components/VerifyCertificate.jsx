@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { TextField, Button, Typography, Box, Paper } from "@mui/material";
 import { useMetaMask } from "../contexts/MetaMaskContext";
-import Navbar from "./Navbar";
+import Navbar from "./NavbarStudent";
 
 const VerifyCertificate = () => {
   const { contract } = useMetaMask(); // Access contract from context
@@ -21,13 +21,19 @@ const VerifyCertificate = () => {
 
     try {
       setError("");
-      const details = await contract.verifyToken(parseInt(tokenId));
+      const details = await contract.getToken(parseInt(tokenId));
       setTokenDetails({
         token_id: details.token_id.toString(),
-        student_name: details.student_name,
-        course: details.course,
+        issuerPublicKey: details.issuerPublicKey,
+        recipientPublicKey: details.recipientPublicKey,
+        name: details.name,
+        credentialID: details.credentialID,
+        credentialTitle: details.credentialTitle,
+        credentialType: details.credentialType,
+        grade: details.grade,
         institution: details.institution,
-        ipfs_id: details.ipfs_id.toString(),
+        ipfsHash: details.ipfsHash,
+        isRevoked: details.isRevoked,
       });
     } catch (err) {
       console.error("Error verifying token:", err);
@@ -100,16 +106,38 @@ const VerifyCertificate = () => {
                 <strong>Token ID:</strong> {tokenDetails.token_id}
               </Typography>
               <Typography variant="body1">
-                <strong>Student Name:</strong> {tokenDetails.student_name}
+                <strong>Issuer Public Key:</strong>{" "}
+                {tokenDetails.issuerPublicKey}
               </Typography>
               <Typography variant="body1">
-                <strong>Course:</strong> {tokenDetails.course}
+                <strong>Recipient Public Key:</strong>{" "}
+                {tokenDetails.recipientPublicKey}
+              </Typography>
+              <Typography variant="body1">
+                <strong>Name:</strong> {tokenDetails.name}
+              </Typography>
+              <Typography variant="body1">
+                <strong>Credential ID:</strong> {tokenDetails.credentialID}
+              </Typography>
+              <Typography variant="body1">
+                <strong>Credential Title:</strong>{" "}
+                {tokenDetails.credentialTitle}
+              </Typography>
+              <Typography variant="body1">
+                <strong>Credential Type:</strong> {tokenDetails.credentialType}
+              </Typography>
+              <Typography variant="body1">
+                <strong>Grade:</strong> {tokenDetails.grade}
               </Typography>
               <Typography variant="body1">
                 <strong>Institution:</strong> {tokenDetails.institution}
               </Typography>
               <Typography variant="body1">
-                <strong>IPFS ID:</strong> {tokenDetails.ipfs_id}
+                <strong>IPFS Hash:</strong> {tokenDetails.ipfsHash}
+              </Typography>
+              <Typography variant="body1">
+                <strong>Revoked:</strong>{" "}
+                {tokenDetails.isRevoked ? "Yes" : "No"}
               </Typography>
             </Box>
           )}
