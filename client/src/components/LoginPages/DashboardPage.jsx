@@ -55,6 +55,10 @@ const DashboardPage = () => {
     });
   };
 
+  const handleExemption = () => {
+    navigate("/reqexemp");
+  };
+
   if (loading) {
     return (
       <Box
@@ -219,6 +223,19 @@ const DashboardPage = () => {
               }}
             >
               Request to Store Academic Certificate
+            </Button>
+            <Button
+              variant="contained"
+              onClick={handleExemption}
+              sx={{
+                marginTop: "20px",
+                backgroundColor: "#676F54", // Reseda Green
+                "&:hover": {
+                  backgroundColor: "#79B4A9", // Cambridge Blue
+                },
+              }}
+            >
+              Request Exemption
             </Button>
           </Box>
         </Paper>

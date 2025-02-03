@@ -201,6 +201,7 @@ const Signup = () => {
             >
               <MenuItem value="Issuer">Issuer</MenuItem>
               <MenuItem value="Student">Student</MenuItem>
+              <MenuItem value="HEI">HEI</MenuItem>
             </TextField>
             <TextField
               label="Public Key"

@@ -51,7 +51,11 @@ const userSchema = new mongoose.Schema({
   id: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   university: { type: String, required: true },
-  userType: { type: String, required: true, enum: ["Issuer", "Student"] }, // Added userType with validation
+  userType: {
+    type: String,
+    required: true,
+    enum: ["Issuer", "Student", "HEI"],
+  }, // Added userType with validation
   publicKey: { type: String, required: true }, // Added publicKey
   password: { type: String, required: true },
 });
@@ -61,10 +65,180 @@ const TokenSchema = new mongoose.Schema({
   tokenId: { type: String, required: true },
   credentialTitle: { type: String, required: true },
   recipientPublicKey: { type: String, required: true },
+  issuerPublicKey: { type: String, required: true }, // New field
 });
+
 const Token = mongoose.model("Token", TokenSchema);
 
 const User = mongoose.model("User", userSchema);
+
+// Exemption Schemas
+const ExemptionRequirementSchema = new mongoose.Schema({
+  course: { type: String, required: true },
+  microCredentials: [{ type: String, required: true }], // Array of required micro-credentials
+  institution: { type: String, required: true },
+  createdBy: { type: String, required: true }, // Public key of the institution
+});
+const ExemptionRequirement = mongoose.model(
+  "ExemptionRequirement",
+  ExemptionRequirementSchema
+);
+
+const ExemptionRequestSchema = new mongoose.Schema({
+  studentName: { type: String, required: true },
+  studentPublicKey: { type: String, required: true },
+  course: { type: String, required: true },
+  tokenIds: [{ type: String, required: true }], // Array of submitted token IDs
+  status: { type: String, default: "Pending" }, // Pending, Approved, Rejected
+});
+const ExemptionRequest = mongoose.model(
+  "ExemptionRequest",
+  ExemptionRequestSchema
+);
+
+// API Endpoints
+
+// Update Exemption Request Status
+app.patch("/api/exemption-requests/:id", async (req, res) => {
+  try {
+    const { id } = req.params; // Get the request ID
+    const { status } = req.body; // Get the new status from the request body
+
+    // Validate status
+    if (!["Accepted", "Rejected", "Pending"].includes(status)) {
+      return res
+        .status(400)
+        .json({ error: "Invalid status. Use Accepted, Rejected, or Pending." });
+    }
+
+    // Find the request by ID and update its status
+    const updatedRequest = await ExemptionRequest.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedRequest) {
+      return res
+        .status(404)
+        .json({ error: "Exemption request not found with the provided ID." });
+    }
+
+    res.status(200).json({
+      message: "Exemption request updated successfully.",
+      updatedRequest,
+    });
+  } catch (error) {
+    console.error("Error updating exemption request:", error.message);
+    res.status(500).json({ error: "Failed to update exemption request." });
+  }
+});
+
+// Save Exemption Requirement
+app.post("/api/exemption-requirements", async (req, res) => {
+  try {
+    const { course, microCredentials, institution, createdBy } = req.body;
+
+    if (!course || !microCredentials || !institution || !createdBy) {
+      return res.status(400).json({ error: "All fields are required." });
+    }
+
+    const newRequirement = new ExemptionRequirement({
+      course,
+      microCredentials,
+      institution,
+      createdBy,
+    });
+
+    await newRequirement.save();
+    res.status(201).json({
+      message: "Exemption requirement saved successfully",
+      newRequirement,
+    });
+  } catch (err) {
+    console.error("Error saving exemption requirement:", err.message);
+    res.status(500).json({ error: "Failed to save exemption requirement." });
+  }
+});
+
+// Retrieve Exemption Requirements
+app.get("/api/exemption-requirements", async (req, res) => {
+  try {
+    const requirements = await ExemptionRequirement.find();
+    res.status(200).json(requirements);
+  } catch (err) {
+    console.error("Error fetching exemption requirements:", err.message);
+    res.status(500).json({ error: "Failed to fetch exemption requirements." });
+  }
+});
+
+// Submit Exemption Request
+app.post("/api/exemption-requests", async (req, res) => {
+  try {
+    const { studentName, studentPublicKey, course, tokenIds } = req.body;
+
+    if (
+      !studentName ||
+      !studentPublicKey ||
+      !course ||
+      !tokenIds ||
+      tokenIds.length === 0
+    ) {
+      return res.status(400).json({ error: "All fields are required." });
+    }
+
+    const newRequest = new ExemptionRequest({
+      studentName,
+      studentPublicKey,
+      course,
+      tokenIds,
+    });
+
+    await newRequest.save();
+    res.status(201).json({
+      message: "Exemption request submitted successfully",
+      newRequest,
+    });
+  } catch (err) {
+    console.error("Error submitting exemption request:", err.message);
+    res.status(500).json({ error: "Failed to submit exemption request." });
+  }
+});
+
+// Retrieve Exemption Requests for Review
+app.get("/api/exemption-requests", async (req, res) => {
+  try {
+    const requests = await ExemptionRequest.find();
+    res.status(200).json(requests);
+  } catch (err) {
+    console.error("Error fetching exemption requests:", err.message);
+    res.status(500).json({ error: "Failed to fetch exemption requests." });
+  }
+});
+
+// Validate Tokens via Smart Contract
+app.post("/api/validate-tokens", async (req, res) => {
+  try {
+    const { tokenIds } = req.body;
+
+    if (!tokenIds || tokenIds.length === 0) {
+      return res.status(400).json({ error: "Token IDs are required." });
+    }
+
+    const tokenDetails = [];
+    for (const tokenId of tokenIds) {
+      const token = await contract.getToken(tokenId); // Interact with the blockchain
+      tokenDetails.push(token);
+    }
+
+    res
+      .status(200)
+      .json({ message: "Tokens validated successfully", tokenDetails });
+  } catch (err) {
+    console.error("Error validating tokens:", err.message);
+    res.status(500).json({ error: "Failed to validate tokens." });
+  }
+});
 
 // Multer Configuration
 const storage = multer.diskStorage({
@@ -254,19 +428,49 @@ app.delete("/api/documents/:id", async (req, res) => {
 // Token Upload API
 app.post("/api/tokens", async (req, res) => {
   try {
-    const { tokenId, credentialTitle, recipientPublicKey } = req.body;
+    const { tokenId, credentialTitle, recipientPublicKey, issuerPublicKey } =
+      req.body;
+
+    // Validate required fields
+    if (
+      !tokenId ||
+      !credentialTitle ||
+      !recipientPublicKey ||
+      !issuerPublicKey
+    ) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
 
     const newToken = new Token({
       tokenId,
       credentialTitle,
       recipientPublicKey,
+      issuerPublicKey, // Save issuer public key
     });
+
     await newToken.save();
 
     res.status(201).json({ message: "Token saved successfully", newToken });
   } catch (err) {
     console.error("Error saving token:", err.message);
     res.status(500).json({ message: "Failed to save token" });
+  }
+});
+
+// Get tokens issued by a specific issuer
+app.get("/api/tokens", async (req, res) => {
+  const { issuerPublicKey } = req.query;
+
+  if (!issuerPublicKey) {
+    return res.status(400).json({ message: "Issuer public key is required" });
+  }
+
+  try {
+    const tokens = await Token.find({ issuerPublicKey });
+    res.status(200).json(tokens);
+  } catch (err) {
+    console.error("Error fetching tokens:", err.message);
+    res.status(500).json({ message: "Failed to fetch tokens" });
   }
 });
 

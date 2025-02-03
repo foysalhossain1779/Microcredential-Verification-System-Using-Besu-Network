@@ -34,12 +34,12 @@ const Login = () => {
         loginUser(data.user);
 
         alert("Login successful!");
-        console.log(data);
-        // Navigate based on userType
         if (data.user.userType === "Student") {
           navigate("/dashboard");
         } else if (data.user.userType === "Issuer") {
           navigate("/admin-dashboard");
+        } else if (data.user.userType === "HEI") {
+          navigate("/Inst-admin-dashboard");
         } else {
           setError("Unknown user type.");
         }
@@ -61,26 +61,41 @@ const Login = () => {
         alignItems: "center",
         justifyContent: "center",
         height: "100vh",
-        backgroundColor: "#D7F2BA", // Tea Green
+        backgroundColor: "#FFFFFF", // White background
+        fontFamily: "Poppins, sans-serif",
       }}
     >
-      <AppBar position="fixed" sx={{ backgroundColor: "#676F54" }}>
+      <AppBar position="static" sx={{ backgroundColor: "#000" }}>
         <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
+          <Typography
+            variant="h4"
+            sx={{
+              flexGrow: 1,
+              fontFamily: "Poppins, sans-serif",
+              fontWeight: "bold",
+              color: "#FFF",
+              textAlign: "center", // Centered text
+            }}
+          >
             Dr. FANS
           </Typography>
         </Toolbar>
       </AppBar>
 
       <Box
-        sx={{ marginTop: "100px", display: "flex", justifyContent: "center" }}
+        sx={{
+          marginTop: "50px",
+          display: "flex",
+          justifyContent: "center",
+        }}
       >
         <Paper
           elevation={3}
           sx={{
-            width: "600px", // Increased the width
-            padding: "40px", // Increased padding
-            backgroundColor: "#BDE4A8", // Celadon
+            width: "500px",
+            padding: "40px",
+            backgroundColor: "#F8F8F8", // Off-white box color
+            border: "1px solid #DDD", // Light gray border
             borderRadius: "10px",
           }}
         >
@@ -88,14 +103,22 @@ const Login = () => {
             variant="h4"
             gutterBottom
             textAlign="center"
-            sx={{ fontWeight: "bold", color: "#676F54", fontSize: "2rem" }} // Increased font size
+            sx={{
+              fontWeight: "bold",
+              fontSize: "2rem",
+              color: "#000",
+            }}
           >
             Welcome to Dr. FANS
           </Typography>
           <Typography
             variant="subtitle1"
             textAlign="center"
-            sx={{ marginBottom: "25px", color: "#79B4A9", fontSize: "1.2rem" }} // Adjusted font size
+            sx={{
+              marginBottom: "20px",
+              color: "#555", // Dark gray text
+              fontSize: "1.2rem",
+            }}
           >
             Your Next Step to Modern Credentialing
           </Typography>
@@ -104,7 +127,11 @@ const Login = () => {
               <Typography
                 variant="body2"
                 color="error"
-                sx={{ marginBottom: "20px", fontSize: "1rem" }}
+                sx={{
+                  marginBottom: "15px",
+                  fontSize: "1rem",
+                  textAlign: "center",
+                }}
               >
                 {error}
               </Typography>
@@ -117,7 +144,18 @@ const Login = () => {
               fullWidth
               required
               margin="normal"
-              sx={{ fontSize: "1rem" }}
+              sx={{
+                backgroundColor: "#FFFFFF", // White background for input
+                borderRadius: "5px",
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "#AAA", // Light gray border
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#555", // Darker gray on hover
+                  },
+                },
+              }}
             />
             <TextField
               label="Password"
@@ -127,7 +165,18 @@ const Login = () => {
               fullWidth
               required
               margin="normal"
-              sx={{ fontSize: "1rem" }}
+              sx={{
+                backgroundColor: "#FFFFFF", // White background for input
+                borderRadius: "5px",
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "#AAA", // Light gray border
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#555", // Darker gray on hover
+                  },
+                },
+              }}
             />
             <Button
               type="submit"
@@ -135,13 +184,14 @@ const Login = () => {
               fullWidth
               sx={{
                 marginTop: "30px",
-                padding: "15px", // Increased button padding
-                backgroundColor: "#676F54", // Reseda Green
-                color: "#fff",
-                fontSize: "1rem", // Increased button font size
+                padding: "15px",
+                backgroundColor: "#000",
+                color: "#FFF",
+                fontSize: "1.2rem",
                 "&:hover": {
-                  backgroundColor: "#79B4A9", // Cambridge Blue
+                  backgroundColor: "#333", // Slightly lighter black
                 },
+                borderRadius: "30px",
               }}
             >
               Sign In
@@ -150,17 +200,22 @@ const Login = () => {
           <Typography
             variant="body2"
             textAlign="center"
-            sx={{ marginTop: "20px", fontSize: "1rem" }}
+            sx={{
+              marginTop: "20px",
+              fontSize: "1rem",
+              color: "#555",
+            }}
           >
             Not a user?{" "}
             <Link
               to="/signup"
               style={{
-                color: "#79B4A9",
-                textDecoration: "none",
+                color: "#000",
+                fontWeight: "bold",
+                textDecoration: "underline",
               }}
             >
-              Please sign up.
+              Sign Up
             </Link>
           </Typography>
         </Paper>

@@ -16,7 +16,7 @@ export const MetaMaskProvider = ({ children }) => {
 
           const provider = new ethers.BrowserProvider(window.ethereum);
           const signer = await provider.getSigner();
-          const contractAddress = "0x2E1f232a9439C3D459FcEca0BeEf13acc8259Dd8";
+          const contractAddress = "0x63B74d6ec212399fEbb1F5b8D3DF9120E3A7Bc8f";
           const tokenContract = new ethers.Contract(
             contractAddress,
             TokenABI.abi,

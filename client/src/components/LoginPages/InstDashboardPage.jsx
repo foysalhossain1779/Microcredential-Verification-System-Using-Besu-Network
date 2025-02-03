@@ -13,7 +13,7 @@ import {
 import { UserContext } from "../../contexts/UserContext";
 import Navbar from "../Navbar"; // Ensure there's a separate Navbar for Admin if required
 
-const AdminDashboardPage = () => {
+const InstDashboardPage = () => {
   const navigate = useNavigate();
   const { user } = useContext(UserContext); // Access user from context
   const [loading, setLoading] = useState(true); // Loading state
@@ -28,15 +28,11 @@ const AdminDashboardPage = () => {
   }, [user]);
 
   const handleReviewCertificates = () => {
-    navigate("/viewAll"); // Navigate to the certificate review page
+    navigate("/adminexemp"); // Navigate to the certificate review page
   };
 
   const handleGetTokenInfo = () => {
-    navigate("/verify"); // Navigate to the token information page
-  };
-
-  const handleTokenView = () => {
-    navigate("/issueView"); // Navigate to the token information page
+    navigate("/adminrevexemp"); // Navigate to the token information page
   };
 
   if (loading) {
@@ -133,20 +129,7 @@ const AdminDashboardPage = () => {
               },
             }}
           >
-            Review Credential Requests
-          </Button>
-          <Button
-            variant="contained"
-            onClick={handleTokenView}
-            sx={{
-              backgroundColor: "#676F54", // Reseda Green
-              color: "#fff",
-              "&:hover": {
-                backgroundColor: "#79B4A9", // Cambridge Blue
-              },
-            }}
-          >
-            Get Token Information
+            Create Exemption Form
           </Button>
           <Button
             variant="contained"
@@ -159,7 +142,7 @@ const AdminDashboardPage = () => {
               },
             }}
           >
-            View Credentials
+            Review Exemption Requests
           </Button>
         </Box>
       </Paper>
@@ -167,4 +150,4 @@ const AdminDashboardPage = () => {
   );
 };
 
-export default AdminDashboardPage;
+export default InstDashboardPage;

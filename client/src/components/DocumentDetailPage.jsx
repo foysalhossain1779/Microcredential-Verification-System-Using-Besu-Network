@@ -81,7 +81,7 @@ const DocumentDetailPage = () => {
       console.log("Transaction mined successfully!");
 
       // Step 2: Fetch the latest tokenCount
-      const tokenCount = await contract.tokenCount();
+      const tokenCount = await contract.lastIssuedTokenId();
       const tokenId = tokenCount.toString();
       console.log("Token ID:", tokenId);
 
@@ -102,6 +102,7 @@ const DocumentDetailPage = () => {
         tokenId: tokenId,
         credentialTitle: document.course,
         recipientPublicKey: document.publicKey,
+        issuerPublicKey: user.publicKey,
       };
       console.log("Uploading token data:", tokenData);
 

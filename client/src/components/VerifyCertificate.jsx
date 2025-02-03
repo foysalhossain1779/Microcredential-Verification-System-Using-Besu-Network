@@ -1,5 +1,17 @@
 import React, { useState } from "react";
-import { TextField, Button, Typography, Box, Paper } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Typography,
+  Box,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from "@mui/material";
 import { useMetaMask } from "../contexts/MetaMaskContext";
 import Navbar from "./NavbarStudent";
 
@@ -21,9 +33,9 @@ const VerifyCertificate = () => {
 
     try {
       setError("");
-      const details = await contract.getToken(parseInt(tokenId));
+      const details = await contract.getToken(tokenId);
       setTokenDetails({
-        token_id: details.token_id.toString(),
+        token_id: details.token_id,
         issuerPublicKey: details.issuerPublicKey,
         recipientPublicKey: details.recipientPublicKey,
         name: details.name,
@@ -60,7 +72,7 @@ const VerifyCertificate = () => {
           sx={{
             padding: "30px",
             width: "100%",
-            maxWidth: "500px",
+            maxWidth: "700px",
             textAlign: "center",
           }}
         >
@@ -69,7 +81,6 @@ const VerifyCertificate = () => {
           </Typography>
           <TextField
             label="Token ID"
-            type="number"
             value={tokenId}
             onChange={handleChange}
             fullWidth
@@ -101,45 +112,68 @@ const VerifyCertificate = () => {
             </Typography>
           )}
           {tokenDetails && (
-            <Box sx={{ marginTop: "20px", textAlign: "left" }}>
-              <Typography variant="body1">
-                <strong>Token ID:</strong> {tokenDetails.token_id}
-              </Typography>
-              <Typography variant="body1">
-                <strong>Issuer Public Key:</strong>{" "}
-                {tokenDetails.issuerPublicKey}
-              </Typography>
-              <Typography variant="body1">
-                <strong>Recipient Public Key:</strong>{" "}
-                {tokenDetails.recipientPublicKey}
-              </Typography>
-              <Typography variant="body1">
-                <strong>Name:</strong> {tokenDetails.name}
-              </Typography>
-              <Typography variant="body1">
-                <strong>Credential ID:</strong> {tokenDetails.credentialID}
-              </Typography>
-              <Typography variant="body1">
-                <strong>Credential Title:</strong>{" "}
-                {tokenDetails.credentialTitle}
-              </Typography>
-              <Typography variant="body1">
-                <strong>Credential Type:</strong> {tokenDetails.credentialType}
-              </Typography>
-              <Typography variant="body1">
-                <strong>Grade:</strong> {tokenDetails.grade}
-              </Typography>
-              <Typography variant="body1">
-                <strong>Institution:</strong> {tokenDetails.institution}
-              </Typography>
-              <Typography variant="body1">
-                <strong>IPFS Hash:</strong> {tokenDetails.ipfsHash}
-              </Typography>
-              <Typography variant="body1">
-                <strong>Revoked:</strong>{" "}
-                {tokenDetails.isRevoked ? "Yes" : "No"}
-              </Typography>
-            </Box>
+            <TableContainer sx={{ marginTop: "20px" }}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>
+                      <strong>Field</strong>
+                    </TableCell>
+                    <TableCell>
+                      <strong>Value</strong>
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <TableRow>
+                    <TableCell>Token ID</TableCell>
+                    <TableCell>{tokenDetails.token_id}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>Issuer Public Key</TableCell>
+                    <TableCell>{tokenDetails.issuerPublicKey}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>Recipient Public Key</TableCell>
+                    <TableCell>{tokenDetails.recipientPublicKey}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>Name</TableCell>
+                    <TableCell>{tokenDetails.name}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>Credential ID</TableCell>
+                    <TableCell>{tokenDetails.credentialID}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>Credential Title</TableCell>
+                    <TableCell>{tokenDetails.credentialTitle}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>Credential Type</TableCell>
+                    <TableCell>{tokenDetails.credentialType}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>Grade</TableCell>
+                    <TableCell>{tokenDetails.grade}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>Institution</TableCell>
+                    <TableCell>{tokenDetails.institution}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>IPFS Hash</TableCell>
+                    <TableCell>{tokenDetails.ipfsHash}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>Revoked</TableCell>
+                    <TableCell>
+                      {tokenDetails.isRevoked ? "Yes" : "No"}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
           )}
         </Paper>
       </Box>
