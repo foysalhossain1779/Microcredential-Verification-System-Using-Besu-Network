@@ -6,19 +6,19 @@ import {
   Typography,
   Paper,
   MenuItem,
+  Grid,
 } from "@mui/material";
 import axios from "axios";
 import Navbar from "./NavbarStudent";
 import { UserContext } from "../contexts/UserContext";
 
 const DocumentUpload = () => {
-  const { user } = useContext(UserContext); // Ensure we get the user context
+  const { user } = useContext(UserContext);
   const [formData, setFormData] = useState({
     name: "",
     course: "",
     institution: "",
     credentialID: "",
-    // credentialTitle: "",
     credentialType: "",
     publicKey: "",
     grade: "",
@@ -27,7 +27,6 @@ const DocumentUpload = () => {
   const [file, setFile] = useState(null);
   const [message, setMessage] = useState("");
 
-  // Update the publicKey dynamically when the user context changes
   useEffect(() => {
     if (user && user.publicKey) {
       setFormData((prev) => ({
@@ -50,7 +49,7 @@ const DocumentUpload = () => {
     e.preventDefault();
 
     if (!file) {
-      setMessage("Please upload a document.");
+      setMessage({ text: "Please upload a document.", type: "error" });
       return;
     }
 
@@ -61,7 +60,7 @@ const DocumentUpload = () => {
     data.append("file", file);
 
     try {
-      setMessage("Uploading...");
+      setMessage({ text: "Uploading...", type: "info" });
       const response = await axios.post(
         "http://localhost:5000/api/upload",
         data,
@@ -71,19 +70,20 @@ const DocumentUpload = () => {
           },
         }
       );
-      setMessage(`Upload successful: ${response.data.message}`);
+      setMessage({
+        text: `Upload successful: ${response.data.message}`,
+        type: "success",
+      });
     } catch (error) {
       console.error("Error uploading document:", error);
-      setMessage("Upload failed. Please try again.");
+      setMessage({ text: "Upload failed. Please try again.", type: "error" });
     }
 
-    // Reset form data after submission
     setFormData({
       name: "",
       course: "",
       institution: "",
       credentialID: "",
-      // credentialTitle: "",
       credentialType: "",
       publicKey: user?.publicKey || "",
       grade: "",
@@ -108,117 +108,127 @@ const DocumentUpload = () => {
         <Paper
           elevation={3}
           sx={{
-            padding: "30px",
+            padding: "40px",
             width: "100%",
-            maxWidth: "600px",
-            textAlign: "center",
+            maxWidth: "700px",
+            borderRadius: "10px",
+            border: "2px solid black",
           }}
         >
-          <Typography variant="h5" gutterBottom>
+          <Typography
+            variant="h4"
+            gutterBottom
+            textAlign="center"
+            sx={{ fontWeight: "bold" }}
+          >
             Upload Document
           </Typography>
           <form onSubmit={handleSubmit}>
-            <TextField
-              label="Name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              fullWidth
-              required
-              margin="normal"
-            />
-            <TextField
-              label="Credential Title"
-              name="course"
-              value={formData.course}
-              onChange={handleChange}
-              fullWidth
-              required
-              margin="normal"
-            />
-            <TextField
-              label="Institution"
-              name="institution"
-              value={formData.institution}
-              onChange={handleChange}
-              fullWidth
-              required
-              margin="normal"
-            />
-            <TextField
-              label="Credential ID"
-              name="credentialID"
-              value={formData.credentialID}
-              onChange={handleChange}
-              fullWidth
-              required
-              margin="normal"
-            />
-            {/* <TextField
-              label="Credential Title"
-              name="credentialTitle"
-              value={formData.credentialTitle}
-              onChange={handleChange}
-              fullWidth
-              required
-              margin="normal"
-            /> */}
-            <TextField
-              select
-              label="Credential Type"
-              name="credentialType"
-              value={formData.credentialType}
-              onChange={handleChange}
-              fullWidth
-              required
-              margin="normal"
-            >
-              <MenuItem value="Academic Credential">
-                Academic Credential
-              </MenuItem>
-              <MenuItem value="Micro-Credential">Micro-Credential</MenuItem>
-            </TextField>
-            <TextField
-              label="Grade"
-              name="grade"
-              value={formData.grade}
-              onChange={handleChange}
-              fullWidth
-              required
-              margin="normal"
-            />
-            <TextField
-              label="Issue Date"
-              type="date"
-              name="issueDate"
-              value={formData.issueDate}
-              onChange={handleChange}
-              fullWidth
-              required
-              margin="normal"
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-            <TextField
-              type="file"
-              onChange={handleFileChange}
-              fullWidth
-              required
-              margin="normal"
-              inputProps={{
-                accept: "application/pdf, application/msword, image/*",
-              }}
-            />
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  fullWidth
+                  required
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Credential Title"
+                  name="course"
+                  value={formData.course}
+                  onChange={handleChange}
+                  fullWidth
+                  required
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Institution"
+                  name="institution"
+                  value={formData.institution}
+                  onChange={handleChange}
+                  fullWidth
+                  required
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Credential ID"
+                  name="credentialID"
+                  value={formData.credentialID}
+                  onChange={handleChange}
+                  fullWidth
+                  required
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  select
+                  label="Credential Type"
+                  name="credentialType"
+                  value={formData.credentialType}
+                  onChange={handleChange}
+                  fullWidth
+                  required
+                >
+                  <MenuItem value="Academic Credential">
+                    Academic Credential
+                  </MenuItem>
+                  <MenuItem value="Micro-Credential">Micro-Credential</MenuItem>
+                </TextField>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Grade"
+                  name="grade"
+                  value={formData.grade}
+                  onChange={handleChange}
+                  fullWidth
+                  required
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Issue Date"
+                  type="date"
+                  name="issueDate"
+                  value={formData.issueDate}
+                  onChange={handleChange}
+                  fullWidth
+                  required
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  type="file"
+                  onChange={handleFileChange}
+                  fullWidth
+                  required
+                  inputProps={{
+                    accept: "application/pdf, application/msword, image/*",
+                  }}
+                />
+              </Grid>
+            </Grid>
             <Button
               type="submit"
               variant="contained"
               sx={{
                 marginTop: "20px",
-                backgroundColor: "#9CC69B",
-                color: "#fff",
+                backgroundColor: "black",
+                color: "white",
+                borderRadius: "10px",
                 "&:hover": {
-                  backgroundColor: "#79B4A9",
+                  backgroundColor: "white",
+                  color: "black",
+                  border: "2px solid black",
                 },
               }}
               fullWidth
@@ -229,9 +239,17 @@ const DocumentUpload = () => {
           {message && (
             <Typography
               variant="body1"
-              sx={{ color: "green", marginTop: "20px" }}
+              sx={{
+                marginTop: "20px",
+                color:
+                  message.type === "success"
+                    ? "green"
+                    : message.type === "error"
+                    ? "red"
+                    : "black",
+              }}
             >
-              {message}
+              {message.text}
             </Typography>
           )}
         </Paper>

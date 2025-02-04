@@ -34,6 +34,7 @@ const Login = () => {
         loginUser(data.user);
 
         alert("Login successful!");
+        console.log(data);
         if (data.user.userType === "Student") {
           navigate("/dashboard");
         } else if (data.user.userType === "Issuer") {
@@ -54,18 +55,14 @@ const Login = () => {
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100vh",
-        backgroundColor: "#FFFFFF", // White background
-        fontFamily: "Poppins, sans-serif",
-      }}
-    >
-      <AppBar position="static" sx={{ backgroundColor: "#000" }}>
+    <Box sx={{ backgroundColor: "#FFFFFF", minHeight: "100vh" }}>
+      <AppBar
+        position="static"
+        sx={{
+          backgroundColor: "#000000",
+          padding: "10px 20px",
+        }}
+      >
         <Toolbar>
           <Typography
             variant="h4"
@@ -73,8 +70,7 @@ const Login = () => {
               flexGrow: 1,
               fontFamily: "Poppins, sans-serif",
               fontWeight: "bold",
-              color: "#FFF",
-              textAlign: "center", // Centered text
+              color: "#FFFFFF",
             }}
           >
             Dr. FANS
@@ -84,41 +80,34 @@ const Login = () => {
 
       <Box
         sx={{
-          marginTop: "50px",
           display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
           justifyContent: "center",
+          height: "100vh",
+          padding: "20px",
         }}
       >
         <Paper
           elevation={3}
           sx={{
-            width: "500px",
+            width: "600px",
             padding: "40px",
-            backgroundColor: "#F8F8F8", // Off-white box color
-            border: "1px solid #DDD", // Light gray border
+            backgroundColor: "#F9F9F9",
             borderRadius: "10px",
+            textAlign: "center",
           }}
         >
           <Typography
             variant="h4"
             gutterBottom
-            textAlign="center"
-            sx={{
-              fontWeight: "bold",
-              fontSize: "2rem",
-              color: "#000",
-            }}
+            sx={{ fontWeight: "bold", fontSize: "2rem" }}
           >
             Welcome to Dr. FANS
           </Typography>
           <Typography
             variant="subtitle1"
-            textAlign="center"
-            sx={{
-              marginBottom: "20px",
-              color: "#555", // Dark gray text
-              fontSize: "1.2rem",
-            }}
+            sx={{ marginBottom: "25px", fontSize: "1.2rem", color: "#555" }}
           >
             Your Next Step to Modern Credentialing
           </Typography>
@@ -127,11 +116,7 @@ const Login = () => {
               <Typography
                 variant="body2"
                 color="error"
-                sx={{
-                  marginBottom: "15px",
-                  fontSize: "1rem",
-                  textAlign: "center",
-                }}
+                sx={{ marginBottom: "20px" }}
               >
                 {error}
               </Typography>
@@ -144,18 +129,6 @@ const Login = () => {
               fullWidth
               required
               margin="normal"
-              sx={{
-                backgroundColor: "#FFFFFF", // White background for input
-                borderRadius: "5px",
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: "#AAA", // Light gray border
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "#555", // Darker gray on hover
-                  },
-                },
-              }}
             />
             <TextField
               label="Password"
@@ -165,18 +138,6 @@ const Login = () => {
               fullWidth
               required
               margin="normal"
-              sx={{
-                backgroundColor: "#FFFFFF", // White background for input
-                borderRadius: "5px",
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: "#AAA", // Light gray border
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "#555", // Darker gray on hover
-                  },
-                },
-              }}
             />
             <Button
               type="submit"
@@ -186,12 +147,10 @@ const Login = () => {
                 marginTop: "30px",
                 padding: "15px",
                 backgroundColor: "#000",
-                color: "#FFF",
-                fontSize: "1.2rem",
+                color: "#fff",
                 "&:hover": {
-                  backgroundColor: "#333", // Slightly lighter black
+                  backgroundColor: "#333",
                 },
-                borderRadius: "30px",
               }}
             >
               Sign In
@@ -199,23 +158,17 @@ const Login = () => {
           </form>
           <Typography
             variant="body2"
-            textAlign="center"
-            sx={{
-              marginTop: "20px",
-              fontSize: "1rem",
-              color: "#555",
-            }}
+            sx={{ marginTop: "20px", fontSize: "1rem" }}
           >
             Not a user?{" "}
             <Link
               to="/signup"
               style={{
                 color: "#000",
-                fontWeight: "bold",
                 textDecoration: "underline",
               }}
             >
-              Sign Up
+              Please sign up.
             </Link>
           </Typography>
         </Paper>

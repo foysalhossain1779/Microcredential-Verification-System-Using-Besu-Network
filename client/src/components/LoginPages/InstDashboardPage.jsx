@@ -6,8 +6,6 @@ import {
   Paper,
   Avatar,
   Button,
-  AppBar,
-  Toolbar,
   CircularProgress,
 } from "@mui/material";
 import { UserContext } from "../../contexts/UserContext";
@@ -43,9 +41,11 @@ const InstDashboardPage = () => {
           justifyContent: "center",
           alignItems: "center",
           height: "100vh",
+          backgroundColor: "black",
+          color: "white",
         }}
       >
-        <CircularProgress />
+        <CircularProgress sx={{ color: "white" }} />
       </Box>
     );
   }
@@ -53,12 +53,13 @@ const InstDashboardPage = () => {
   return (
     <Box
       sx={{
-        backgroundColor: "#D7F2BA", // Tea Green
+        backgroundColor: "white",
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         padding: "0px",
+        fontFamily: "Poppins, sans-serif",
       }}
     >
       <Navbar />
@@ -66,45 +67,70 @@ const InstDashboardPage = () => {
       <Paper
         elevation={3}
         sx={{
-          width: "100%",
+          width: "90%",
           maxWidth: "800px",
-          padding: "30px",
-          backgroundColor: "#BDE4A8", // Celadon
-          marginTop: "20px",
+          padding: "40px",
           borderRadius: "10px",
+          border: "2px solid black",
+          marginTop: "20px",
         }}
       >
         <Typography
           variant="h4"
           gutterBottom
           textAlign="center"
-          sx={{ fontWeight: "bold", color: "#676F54" }}
+          sx={{
+            fontWeight: "bold",
+            color: "black",
+            fontSize: "32px",
+          }}
         >
           Institution Profile
         </Typography>
 
         <Box
-          sx={{ display: "flex", alignItems: "center", marginBottom: "20px" }}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            marginBottom: "30px",
+          }}
         >
           <Avatar
             sx={{
-              width: 80,
-              height: 80,
+              width: 100,
+              height: 100,
               marginRight: "20px",
-              backgroundColor: "#9CC69B",
+              backgroundColor: "black",
+              color: "white",
+              fontSize: "24px",
+              fontWeight: "bold",
             }}
-          />
+          >
+            {user.name ? user.name[0] : "A"}
+          </Avatar>
           <Box>
-            <Typography>
+            <Typography
+              variant="body1"
+              sx={{ fontSize: "18px", marginBottom: "5px" }}
+            >
               <strong>ID:</strong> {user.id || "No ID Provided"}
             </Typography>
-            <Typography>
+            <Typography
+              variant="body1"
+              sx={{ fontSize: "18px", marginBottom: "5px" }}
+            >
               <strong>Name:</strong> {user.name || "No Name Provided"}
             </Typography>
-            <Typography>
+            <Typography
+              variant="body1"
+              sx={{ fontSize: "18px", marginBottom: "5px" }}
+            >
               <strong>Email:</strong> {user.email || "No Email Provided"}
             </Typography>
-            <Typography>
+            <Typography
+              variant="body1"
+              sx={{ fontSize: "18px", marginBottom: "5px" }}
+            >
               <strong>Role:</strong> Admin
             </Typography>
           </Box>
@@ -114,18 +140,27 @@ const InstDashboardPage = () => {
         <Box
           sx={{
             display: "flex",
-            justifyContent: "space-around",
+            justifyContent: "space-evenly",
             marginTop: "30px",
+            flexWrap: "wrap",
+            gap: "15px",
           }}
         >
           <Button
             variant="contained"
             onClick={handleReviewCertificates}
             sx={{
-              backgroundColor: "#676F54", // Reseda Green
-              color: "#fff",
+              backgroundColor: "black",
+              color: "white",
+              fontWeight: "bold",
+              fontSize: "16px",
+              borderRadius: "10px",
+              padding: "10px 20px",
+              textTransform: "none",
               "&:hover": {
-                backgroundColor: "#79B4A9", // Cambridge Blue
+                backgroundColor: "white",
+                color: "black",
+                border: "2px solid black",
               },
             }}
           >
@@ -135,10 +170,17 @@ const InstDashboardPage = () => {
             variant="contained"
             onClick={handleGetTokenInfo}
             sx={{
-              backgroundColor: "#676F54", // Reseda Green
-              color: "#fff",
+              backgroundColor: "black",
+              color: "white",
+              fontWeight: "bold",
+              fontSize: "16px",
+              borderRadius: "10px",
+              padding: "10px 20px",
+              textTransform: "none",
               "&:hover": {
-                backgroundColor: "#79B4A9", // Cambridge Blue
+                backgroundColor: "white",
+                color: "black",
+                border: "2px solid black",
               },
             }}
           >

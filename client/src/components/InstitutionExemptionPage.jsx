@@ -23,7 +23,6 @@ const InstitutionExemptionPage = () => {
   const [microCredentials, setMicroCredentials] = useState([""]);
   const [exemptionRequests, setExemptionRequests] = useState([]);
 
-  // Fetch exemption requests on load
   useEffect(() => {
     const fetchExemptionRequests = async () => {
       try {
@@ -82,15 +81,21 @@ const InstitutionExemptionPage = () => {
       <Navbar />
       <Box
         sx={{
-          backgroundColor: "#D7F2BA", // Tea Green
+          fontFamily: "Poppins, sans-serif",
+          backgroundColor: "white",
           minHeight: "100vh",
-          padding: "20px",
+          padding: "30px",
         }}
       >
         <Typography
           variant="h4"
           textAlign="center"
-          sx={{ fontWeight: "bold", marginBottom: "20px", color: "#676F54" }}
+          sx={{
+            fontWeight: "bold",
+            marginBottom: "30px",
+            color: "black",
+            fontSize: "32px",
+          }}
         >
           Institution Exemption Portal
         </Typography>
@@ -99,14 +104,20 @@ const InstitutionExemptionPage = () => {
         <Paper
           elevation={3}
           sx={{
-            padding: "20px",
-            marginBottom: "30px",
-            backgroundColor: "#fff",
+            padding: "30px",
+            maxWidth: "800px",
+            margin: "0 auto 30px auto",
+            border: "2px solid black",
+            borderRadius: "10px",
           }}
         >
           <Typography
             variant="h5"
-            sx={{ fontWeight: "bold", marginBottom: "20px" }}
+            sx={{
+              fontWeight: "bold",
+              marginBottom: "20px",
+              textAlign: "center",
+            }}
           >
             Post Exemption Requirement
           </Typography>
@@ -116,7 +127,12 @@ const InstitutionExemptionPage = () => {
             onChange={(e) => setCourse(e.target.value)}
             fullWidth
             required
-            sx={{ marginBottom: "15px" }}
+            sx={{
+              marginBottom: "20px",
+              "& .MuiInputBase-root": {
+                borderRadius: "10px",
+              },
+            }}
           />
           {microCredentials.map((value, index) => (
             <Box
@@ -124,7 +140,7 @@ const InstitutionExemptionPage = () => {
               sx={{
                 display: "flex",
                 alignItems: "center",
-                marginBottom: "15px",
+                marginBottom: "20px",
               }}
             >
               <TextField
@@ -135,12 +151,24 @@ const InstitutionExemptionPage = () => {
                 }
                 fullWidth
                 required
-                sx={{ marginRight: "10px" }}
+                sx={{
+                  marginRight: "10px",
+                  "& .MuiInputBase-root": {
+                    borderRadius: "10px",
+                  },
+                }}
               />
               <Button
                 color="error"
                 onClick={() => handleRemoveMicroCredential(index)}
                 startIcon={<RemoveCircleOutlineIcon />}
+                sx={{
+                  textTransform: "none",
+                  fontWeight: "bold",
+                  "&:hover": {
+                    backgroundColor: "#ffcccc",
+                  },
+                }}
               >
                 Remove
               </Button>
@@ -150,13 +178,23 @@ const InstitutionExemptionPage = () => {
             sx={{
               display: "flex",
               justifyContent: "space-between",
-              marginTop: "20px",
+              marginTop: "30px",
             }}
           >
             <Button
               variant="outlined"
               onClick={handleAddMicroCredential}
               startIcon={<AddCircleOutlineIcon />}
+              sx={{
+                fontWeight: "bold",
+                textTransform: "none",
+                borderRadius: "10px",
+                "&:hover": {
+                  backgroundColor: "black",
+                  color: "white",
+                  border: "2px solid black",
+                },
+              }}
             >
               Add Micro-Credential
             </Button>
@@ -164,23 +202,41 @@ const InstitutionExemptionPage = () => {
               variant="contained"
               onClick={handlePostRequirement}
               sx={{
-                backgroundColor: "#1976d2",
-                color: "#fff",
+                backgroundColor: "black",
+                color: "white",
+                fontWeight: "bold",
+                borderRadius: "10px",
+                textTransform: "none",
                 "&:hover": {
-                  backgroundColor: "#1565c0",
+                  backgroundColor: "white",
+                  color: "black",
+                  border: "2px solid black",
                 },
               }}
             >
-              POST REQUIREMENT
+              Post Requirement
             </Button>
           </Box>
         </Paper>
 
         {/* Review Exemption Requests Section */}
-        <Paper elevation={3} sx={{ padding: "20px", backgroundColor: "#fff" }}>
+        <Paper
+          elevation={3}
+          sx={{
+            padding: "30px",
+            maxWidth: "800px",
+            margin: "0 auto",
+            border: "2px solid black",
+            borderRadius: "10px",
+          }}
+        >
           <Typography
             variant="h5"
-            sx={{ fontWeight: "bold", marginBottom: "20px" }}
+            sx={{
+              fontWeight: "bold",
+              marginBottom: "20px",
+              textAlign: "center",
+            }}
           >
             Review Exemption Requests
           </Typography>
@@ -189,10 +245,12 @@ const InstitutionExemptionPage = () => {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Student Name</TableCell>
-                    <TableCell>Course</TableCell>
-                    <TableCell>Token IDs</TableCell>
-                    <TableCell>Status</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>
+                      Student Name
+                    </TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>Course</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>Token IDs</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>Status</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -208,7 +266,15 @@ const InstitutionExemptionPage = () => {
               </Table>
             </TableContainer>
           ) : (
-            <Typography>No requests to review yet.</Typography>
+            <Typography
+              sx={{
+                textAlign: "center",
+                color: "gray",
+                fontWeight: "bold",
+              }}
+            >
+              No requests to review yet.
+            </Typography>
           )}
         </Paper>
       </Box>

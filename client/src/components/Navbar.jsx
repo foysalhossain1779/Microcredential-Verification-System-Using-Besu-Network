@@ -6,13 +6,14 @@ import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { useNavigate } from "react-router-dom";
+import { Box } from "@mui/material";
 
 const Navbar = () => {
   const [account, setAccount] = useState(null);
   const [isSnackbarOpen, setSnackbarOpen] = useState(false);
   const navigate = useNavigate();
-  //Function to connect to wallet
 
+  // Function to connect to wallet
   const connectWallet = async () => {
     if (window.ethereum) {
       try {
@@ -30,56 +31,91 @@ const Navbar = () => {
       );
     }
   };
+
   return (
     <AppBar
       position="static"
       sx={{
-        backgroundColor: "#79B4A9", // Cambridge Blue
-        color: "#FFFFFF", // White text
+        backgroundColor: "black", // Black background for AppBar
+        color: "white", // White text
+        boxShadow: "none",
+        borderBottom: "2px solid black",
       }}
     >
-      <Toolbar>
+      <Toolbar
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
         <Typography
           variant="h6"
           component="div"
-          sx={{ flexGrow: 1, color: "#D7F2BA" }} // Tea Green for text
+          sx={{
+            fontWeight: "bold",
+            cursor: "pointer",
+            color: "white",
+          }}
+          onClick={() => navigate("/dashboard")}
         >
           Dr. FANS
         </Typography>
-        <Button
-          onClick={() => navigate("/dashboard")}
-          color="inherit"
-          sx={{ color: "#BDE4A8" }}
-        >
-          Home
-        </Button>
-        <Button
-          onClick={() => navigate("/DocUp")}
-          color="inherit"
-          sx={{ color: "#BDE4A8" }}
-        >
-          Student Home
-        </Button>
-        <Button
-          onClick={() => navigate("/viewAll")}
-          color="inherit"
-          sx={{ color: "#BDE4A8" }}
-        >
-          View all documents
-        </Button>
-        <Button
-          variant="contained"
-          onClick={connectWallet}
-          sx={{
-            marginLeft: "20px",
-            backgroundColor: account ? "#9CC69B" : "#676F54", // Different color if connected
-            "&:hover": {
-              backgroundColor: "#79B4A9",
-            },
-          }}
-        >
-          {account ? "Connected" : "Connect"}
-        </Button>
+        <Box sx={{ display: "flex", alignItems: "center", gap: "15px" }}>
+          <Button
+            onClick={() => navigate("/dashboard")}
+            sx={{
+              color: "white",
+              textTransform: "none",
+              "&:hover": {
+                color: "#f0f0f0",
+              },
+            }}
+          >
+            Home
+          </Button>
+          <Button
+            onClick={() => navigate("/DocUp")}
+            sx={{
+              color: "white",
+              textTransform: "none",
+              "&:hover": {
+                color: "#f0f0f0",
+              },
+            }}
+          >
+            Student Home
+          </Button>
+          <Button
+            onClick={() => navigate("/viewAll")}
+            sx={{
+              color: "white",
+              textTransform: "none",
+              "&:hover": {
+                color: "#f0f0f0",
+              },
+            }}
+          >
+            View All Documents
+          </Button>
+          <Button
+            variant="contained"
+            onClick={connectWallet}
+            sx={{
+              backgroundColor: account ? "white" : "black",
+              color: account ? "black" : "white",
+              borderRadius: "20px",
+              textTransform: "none",
+              "&:hover": {
+                backgroundColor: account ? "#f0f0f0" : "white",
+                color: account ? "black" : "black",
+                border: "2px solid black",
+              },
+            }}
+          >
+            {account ? "Connected" : "Connect"}
+          </Button>
+        </Box>
       </Toolbar>
       {/* Snackbar for success message */}
       <Snackbar
@@ -90,7 +126,11 @@ const Navbar = () => {
         <Alert
           onClose={() => setSnackbarOpen(false)}
           severity="success"
-          sx={{ width: "100%" }}
+          sx={{
+            width: "100%",
+            backgroundColor: "black",
+            color: "white",
+          }}
         >
           MetaMask connected successfully to {account}.
         </Alert>

@@ -70,13 +70,19 @@ const VerifyCertificate = () => {
         <Paper
           elevation={3}
           sx={{
-            padding: "30px",
+            padding: "40px",
             width: "100%",
             maxWidth: "700px",
-            textAlign: "center",
+            borderRadius: "10px",
+            border: "2px solid black",
           }}
         >
-          <Typography variant="h5" gutterBottom>
+          <Typography
+            variant="h4"
+            gutterBottom
+            textAlign="center"
+            sx={{ fontWeight: "bold" }}
+          >
             Verify Certificate
           </Typography>
           <TextField
@@ -86,16 +92,25 @@ const VerifyCertificate = () => {
             fullWidth
             required
             margin="normal"
+            sx={{
+              marginBottom: "20px",
+              "& .MuiInputBase-root": {
+                borderRadius: "10px",
+              },
+            }}
           />
           <Button
             variant="contained"
             onClick={handleVerify}
             sx={{
-              marginTop: "20px",
-              backgroundColor: "#9CC69B",
-              color: "#fff",
+              backgroundColor: "black",
+              color: "white",
+              borderRadius: "10px",
+              padding: "10px 20px",
               "&:hover": {
-                backgroundColor: "#79B4A9",
+                backgroundColor: "white",
+                color: "black",
+                border: "2px solid black",
               },
             }}
             fullWidth
@@ -106,21 +121,31 @@ const VerifyCertificate = () => {
             <Typography
               variant="body1"
               color="error"
-              sx={{ marginTop: "20px" }}
+              sx={{ marginTop: "20px", textAlign: "center" }}
             >
               {error}
             </Typography>
           )}
           {tokenDetails && (
-            <TableContainer sx={{ marginTop: "20px" }}>
+            <TableContainer
+              sx={{
+                marginTop: "30px",
+                border: "2px solid black",
+                borderRadius: "10px",
+              }}
+            >
               <Table>
-                <TableHead>
+                <TableHead sx={{ backgroundColor: "#f0f0f0" }}>
                   <TableRow>
                     <TableCell>
-                      <strong>Field</strong>
+                      <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+                        Field
+                      </Typography>
                     </TableCell>
                     <TableCell>
-                      <strong>Value</strong>
+                      <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+                        Value
+                      </Typography>
                     </TableCell>
                   </TableRow>
                 </TableHead>

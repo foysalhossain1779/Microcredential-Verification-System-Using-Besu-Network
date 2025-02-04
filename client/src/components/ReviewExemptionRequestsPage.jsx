@@ -81,9 +81,9 @@ const ReviewExemptionRequestsPage = () => {
 
     try {
       setError("");
-      const details = await contract.getToken(parseInt(tokenId));
+      const details = await contract.getToken(tokenId);
       setTokenDetails({
-        token_id: details.token_id.toString(),
+        token_id: details.token_id,
         issuerPublicKey: details.issuerPublicKey,
         recipientPublicKey: details.recipientPublicKey,
         name: details.name,
@@ -107,196 +107,251 @@ const ReviewExemptionRequestsPage = () => {
       <Navbar />
       <Box
         sx={{
-          backgroundColor: "#D7F2BA",
+          fontFamily: "Poppins, sans-serif",
+          backgroundColor: "white",
           minHeight: "100vh",
-          padding: "20px",
+          padding: "30px",
         }}
       >
         <Typography
           variant="h4"
           textAlign="center"
-          sx={{ fontWeight: "bold", marginBottom: "20px", color: "#676F54" }}
+          sx={{
+            fontWeight: "bold",
+            marginBottom: "30px",
+            color: "black",
+            fontSize: "32px",
+          }}
         >
           Review Exemption Requests
         </Typography>
 
-        <Paper elevation={3} sx={{ padding: "20px", backgroundColor: "#fff" }}>
-          <Typography variant="h5" gutterBottom>
-            Pending Requests
-          </Typography>
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Student Name</TableCell>
-                  <TableCell>Course</TableCell>
-                  <TableCell>Tokens</TableCell>
-                  <TableCell>Actions</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {pendingRequests.map((request) => (
-                  <TableRow key={request._id}>
-                    <TableCell>{request.studentName}</TableCell>
-                    <TableCell>{request.course}</TableCell>
-                    <TableCell>{request.tokenIds.join(", ")}</TableCell>
-                    <TableCell>
-                      <Button
-                        onClick={() => handleAction(request._id, "accept")}
-                        disabled={loading}
-                        variant="contained"
-                        sx={{
-                          backgroundColor: "#1976d2",
-                          color: "#fff",
-                          marginRight: "10px",
-                        }}
-                      >
-                        Accept
-                      </Button>
-                      <Button
-                        onClick={() => handleAction(request._id, "decline")}
-                        disabled={loading}
-                        variant="contained"
-                        sx={{ backgroundColor: "#d32f2f", color: "#fff" }}
-                      >
-                        Decline
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Paper>
-
+        {/* Pending Requests Section */}
         <Paper
           elevation={3}
-          sx={{ padding: "20px", marginTop: "20px", backgroundColor: "#fff" }}
+          sx={{
+            padding: "30px",
+            marginBottom: "30px",
+            border: "2px solid black",
+            borderRadius: "10px",
+          }}
         >
-          <Typography variant="h5" gutterBottom>
-            Processed Requests
-          </Typography>
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Student Name</TableCell>
-                  <TableCell>Course</TableCell>
-                  <TableCell>Tokens</TableCell>
-                  <TableCell>Status</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {processedRequests.map((request) => (
-                  <TableRow key={request._id}>
-                    <TableCell>{request.studentName}</TableCell>
-                    <TableCell>{request.course}</TableCell>
-                    <TableCell>{request.tokenIds.join(", ")}</TableCell>
-                    <TableCell>{request.status}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Paper>
-
-        <Box sx={{ marginTop: "40px" }}>
           <Typography
             variant="h5"
-            gutterBottom
-            textAlign="center"
-            sx={{ fontWeight: "bold", color: "#676F54" }}
+            sx={{
+              fontWeight: "bold",
+              marginBottom: "20px",
+              textAlign: "center",
+            }}
+          >
+            Pending Requests
+          </Typography>
+          {pendingRequests.length > 0 ? (
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: "bold" }}>
+                      Student Name
+                    </TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>Course</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>Tokens</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>Actions</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {pendingRequests.map((request) => (
+                    <TableRow key={request._id}>
+                      <TableCell>{request.studentName}</TableCell>
+                      <TableCell>{request.course}</TableCell>
+                      <TableCell>{request.tokenIds.join(", ")}</TableCell>
+                      <TableCell>
+                        <Button
+                          onClick={() => handleAction(request._id, "accept")}
+                          disabled={loading}
+                          variant="contained"
+                          sx={{
+                            backgroundColor: "black",
+                            color: "white",
+                            fontWeight: "bold",
+                            textTransform: "none",
+                            marginRight: "10px",
+                            borderRadius: "10px",
+                            "&:hover": {
+                              backgroundColor: "white",
+                              color: "black",
+                              border: "2px solid black",
+                            },
+                          }}
+                        >
+                          Accept
+                        </Button>
+                        <Button
+                          onClick={() => handleAction(request._id, "decline")}
+                          disabled={loading}
+                          variant="contained"
+                          sx={{
+                            backgroundColor: "red",
+                            color: "white",
+                            fontWeight: "bold",
+                            textTransform: "none",
+                            borderRadius: "10px",
+                            "&:hover": {
+                              backgroundColor: "#ffcccc",
+                              color: "black",
+                              border: "2px solid red",
+                            },
+                          }}
+                        >
+                          Decline
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          ) : (
+            <Typography
+              textAlign="center"
+              sx={{ color: "gray", fontWeight: "bold" }}
+            >
+              No pending requests.
+            </Typography>
+          )}
+        </Paper>
+
+        {/* Processed Requests Section */}
+        <Paper
+          elevation={3}
+          sx={{
+            padding: "30px",
+            marginBottom: "30px",
+            border: "2px solid black",
+            borderRadius: "10px",
+          }}
+        >
+          <Typography
+            variant="h5"
+            sx={{
+              fontWeight: "bold",
+              marginBottom: "20px",
+              textAlign: "center",
+            }}
+          >
+            Processed Requests
+          </Typography>
+          {processedRequests.length > 0 ? (
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: "bold" }}>
+                      Student Name
+                    </TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>Course</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>Tokens</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>Status</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {processedRequests.map((request) => (
+                    <TableRow key={request._id}>
+                      <TableCell>{request.studentName}</TableCell>
+                      <TableCell>{request.course}</TableCell>
+                      <TableCell>{request.tokenIds.join(", ")}</TableCell>
+                      <TableCell>{request.status}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          ) : (
+            <Typography
+              textAlign="center"
+              sx={{ color: "gray", fontWeight: "bold" }}
+            >
+              No processed requests.
+            </Typography>
+          )}
+        </Paper>
+
+        {/* Verify Certificate Section */}
+        <Paper
+          elevation={3}
+          sx={{
+            padding: "30px",
+            maxWidth: "500px",
+            margin: "0 auto",
+            border: "2px solid black",
+            borderRadius: "10px",
+          }}
+        >
+          <Typography
+            variant="h5"
+            sx={{
+              fontWeight: "bold",
+              marginBottom: "20px",
+              textAlign: "center",
+            }}
           >
             Verify Certificate
           </Typography>
-          <Paper
-            elevation={3}
+          <TextField
+            label="Token ID"
+            value={tokenId}
+            onChange={(e) => setTokenId(e.target.value)}
+            fullWidth
+            required
+            margin="normal"
             sx={{
-              padding: "30px",
-              width: "100%",
-              maxWidth: "500px",
-              margin: "0 auto",
-              textAlign: "center",
-              backgroundColor: "#fff",
+              "& .MuiInputBase-root": {
+                borderRadius: "10px",
+              },
             }}
+          />
+          <Button
+            variant="contained"
+            onClick={handleVerifyToken}
+            sx={{
+              marginTop: "20px",
+              backgroundColor: "black",
+              color: "white",
+              fontWeight: "bold",
+              borderRadius: "10px",
+              textTransform: "none",
+              "&:hover": {
+                backgroundColor: "white",
+                color: "black",
+                border: "2px solid black",
+              },
+            }}
+            fullWidth
           >
-            <TextField
-              label="Token ID"
-              type="number"
-              value={tokenId}
-              onChange={(e) => setTokenId(e.target.value)}
-              fullWidth
-              required
-              margin="normal"
-            />
-            <Button
-              variant="contained"
-              onClick={handleVerifyToken}
-              sx={{
-                marginTop: "20px",
-                backgroundColor: "#9CC69B",
-                color: "#fff",
-                "&:hover": {
-                  backgroundColor: "#79B4A9",
-                },
-              }}
-              fullWidth
+            Verify
+          </Button>
+          {error && (
+            <Typography
+              variant="body1"
+              color="error"
+              sx={{ marginTop: "20px", textAlign: "center" }}
             >
-              Verify
-            </Button>
-            {error && (
-              <Typography
-                variant="body1"
-                color="error"
-                sx={{ marginTop: "20px" }}
-              >
-                {error}
-              </Typography>
-            )}
-            {tokenDetails && (
-              <Box sx={{ marginTop: "20px", textAlign: "left" }}>
-                <Typography variant="body1">
-                  <strong>Token ID:</strong> {tokenDetails.token_id}
+              {error}
+            </Typography>
+          )}
+          {tokenDetails && (
+            <Box sx={{ marginTop: "20px", textAlign: "left" }}>
+              {Object.entries(tokenDetails).map(([key, value]) => (
+                <Typography variant="body1" key={key} gutterBottom>
+                  <strong>{`${
+                    key.charAt(0).toUpperCase() + key.slice(1)
+                  }:`}</strong>{" "}
+                  {value?.toString()}
                 </Typography>
-                <Typography variant="body1">
-                  <strong>Issuer Public Key:</strong>{" "}
-                  {tokenDetails.issuerPublicKey}
-                </Typography>
-                <Typography variant="body1">
-                  <strong>Recipient Public Key:</strong>{" "}
-                  {tokenDetails.recipientPublicKey}
-                </Typography>
-                <Typography variant="body1">
-                  <strong>Name:</strong> {tokenDetails.name}
-                </Typography>
-                <Typography variant="body1">
-                  <strong>Credential ID:</strong> {tokenDetails.credentialID}
-                </Typography>
-                <Typography variant="body1">
-                  <strong>Credential Title:</strong>{" "}
-                  {tokenDetails.credentialTitle}
-                </Typography>
-                <Typography variant="body1">
-                  <strong>Credential Type:</strong>{" "}
-                  {tokenDetails.credentialType}
-                </Typography>
-                <Typography variant="body1">
-                  <strong>Grade:</strong> {tokenDetails.grade}
-                </Typography>
-                <Typography variant="body1">
-                  <strong>Institution:</strong> {tokenDetails.institution}
-                </Typography>
-                <Typography variant="body1">
-                  <strong>IPFS Hash:</strong> {tokenDetails.ipfsHash}
-                </Typography>
-                <Typography variant="body1">
-                  <strong>Revoked:</strong>{" "}
-                  {tokenDetails.isRevoked ? "Yes" : "No"}
-                </Typography>
-              </Box>
-            )}
-          </Paper>
-        </Box>
+              ))}
+            </Box>
+          )}
+        </Paper>
       </Box>
     </div>
   );

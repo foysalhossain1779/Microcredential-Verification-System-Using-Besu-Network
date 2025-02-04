@@ -1,4 +1,3 @@
-// Import dependencies
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -10,6 +9,7 @@ import {
   ListItem,
   ListItemText,
   Button,
+  Divider,
 } from "@mui/material";
 
 import Navbar from "./Navbar";
@@ -32,30 +32,51 @@ const DocumentsListPage = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          justifyContent: "center",
           padding: "20px",
-          backgroundColor: "#D7F2BA", // Tea Green
+          backgroundColor: "white",
           minHeight: "100vh",
         }}
       >
         <Paper
           elevation={3}
           sx={{
-            padding: "30px",
-            maxWidth: "600px",
+            padding: "40px",
+            maxWidth: "700px",
             width: "100%",
-            backgroundColor: "#BDE4A8", // Celadon
+            borderRadius: "10px",
+            border: "2px solid black",
+            marginTop: "20px", // Moved closer to the top
           }}
         >
-          <Typography variant="h4" gutterBottom textAlign="center">
+          <Typography
+            variant="h4"
+            gutterBottom
+            textAlign="center"
+            sx={{ fontWeight: "bold", color: "black" }}
+          >
             Documents List
           </Typography>
+          <Divider sx={{ marginY: "20px", backgroundColor: "black" }} />
           <List>
             {documents.map((doc) => (
-              <ListItem key={doc._id} sx={{ marginBottom: "10px" }}>
+              <ListItem
+                key={doc._id}
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: "15px",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  padding: "10px",
+                }}
+              >
                 <ListItemText
                   primary={
-                    <Typography variant="body1" color="textPrimary">
+                    <Typography
+                      variant="body1"
+                      sx={{ fontWeight: "bold", color: "black" }}
+                    >
                       {doc.name} - {doc.course} - {doc.institution}
                     </Typography>
                   }
@@ -65,10 +86,13 @@ const DocumentsListPage = () => {
                   component={Link}
                   to={`/document/${doc._id}`}
                   sx={{
-                    backgroundColor: "#79B4A9", // Cambridge Blue
-                    color: "#fff",
+                    backgroundColor: "black",
+                    color: "white",
+                    borderRadius: "10px",
                     "&:hover": {
-                      backgroundColor: "#676F54", // Reseda Green
+                      backgroundColor: "white",
+                      color: "black",
+                      border: "2px solid black",
                     },
                   }}
                 >
@@ -76,6 +100,14 @@ const DocumentsListPage = () => {
                 </Button>
               </ListItem>
             ))}
+            {documents.length === 0 && (
+              <Typography
+                variant="body1"
+                sx={{ textAlign: "center", color: "gray", marginTop: "20px" }}
+              >
+                No documents available at the moment.
+              </Typography>
+            )}
           </List>
         </Paper>
       </Box>

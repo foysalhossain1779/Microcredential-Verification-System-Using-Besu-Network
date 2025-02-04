@@ -475,7 +475,7 @@ app.get("/api/tokens", async (req, res) => {
 });
 
 //Get Token
-app.get("/api/tokens", async (req, res) => {
+app.get("/api/tokens/recipient", async (req, res) => {
   const { publicKey } = req.query;
   const tokens = await Token.find({ recipientPublicKey: publicKey });
   res.status(200).json(tokens);

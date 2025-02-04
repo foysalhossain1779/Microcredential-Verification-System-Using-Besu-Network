@@ -1,6 +1,5 @@
-// Import dependencies
 import React, { useEffect, useState, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
   Box,
@@ -8,11 +7,11 @@ import {
   Button,
   Paper,
   CircularProgress,
+  Divider,
 } from "@mui/material";
 import { useMetaMask } from "../contexts/MetaMaskContext";
 import Navbar from "./Navbar";
 import { UserContext } from "../contexts/UserContext";
-import { useNavigate } from "react-router-dom";
 
 const DocumentDetailPage = () => {
   const navigate = useNavigate();
@@ -21,9 +20,8 @@ const DocumentDetailPage = () => {
   const [loading, setLoading] = useState(true); // Loading state
   const [generating, setGenerating] = useState(false); // Generating IPFS CID state
   const [submitting, setSubmitting] = useState(false); // Submitting to blockchain state
-  const { user, logoutUser } = useContext(UserContext);
-
-  const { contract, account } = useMetaMask(); // MetaMask context
+  const { user } = useContext(UserContext);
+  const { contract } = useMetaMask(); // MetaMask context
 
   useEffect(() => {
     const fetchDocument = async () => {
@@ -64,7 +62,6 @@ const DocumentDetailPage = () => {
 
     setSubmitting(true);
     try {
-      // Step 1: Submit to Blockchain
       const tx = await contract.issueToken(
         user.publicKey,
         document.publicKey,
@@ -76,54 +73,56 @@ const DocumentDetailPage = () => {
         document.institution,
         document.ipfsCID
       );
-
       await tx.wait();
-      console.log("Transaction mined successfully!");
 
-      // Step 2: Fetch the latest tokenCount
       const tokenCount = await contract.lastIssuedTokenId();
       const tokenId = tokenCount.toString();
-      console.log("Token ID:", tokenId);
 
-      // Step 3: Validate Document ID
-      if (!document._id) {
-        throw new Error("Document ID is invalid or missing.");
-      }
+      await axios.delete(`http://localhost:5000/api/documents/${document._id}`);
 
-      // Step 4: Delete the Document from the Database using Axios
-      console.log("Deleting document with ID:", document._id);
-      const deleteResponse = await axios.delete(
-        `http://localhost:5000/api/documents/${document._id}`
-      );
-      console.log("Document deleted successfully:", deleteResponse.data);
-
-      // Step 5: Upload New Token to the Database using Axios
       const tokenData = {
         tokenId: tokenId,
         credentialTitle: document.course,
         recipientPublicKey: document.publicKey,
         issuerPublicKey: user.publicKey,
       };
-      console.log("Uploading token data:", tokenData);
 
-      const uploadResponse = await axios.post(
-        `http://localhost:5000/api/tokens`,
-        tokenData
-      );
-      console.log("Token data uploaded successfully:", uploadResponse.data);
+      await axios.post(`http://localhost:5000/api/tokens`, tokenData);
 
-      alert(
-        "Document submitted to blockchain, deleted from database, and token saved successfully!"
-      );
+      alert("Document submitted to blockchain and token saved successfully!");
     } catch (error) {
       console.error("Error in submitToBlockchain:", error);
-      alert(
-        error.message || "Failed to complete the process. Please try again."
-      );
+      alert("Failed to complete the process. Please try again.");
     } finally {
       setSubmitting(false);
     }
     navigate("/viewAll");
+  };
+
+  const renderFilePreview = () => {
+    if (document.mimetype.startsWith("image")) {
+      return (
+        <img
+          src={`http://localhost:5000/${document.filepath}`}
+          alt={document.filename}
+          style={{ maxWidth: "100%", borderRadius: "10px" }}
+        />
+      );
+    } else if (document.mimetype === "application/pdf") {
+      return (
+        <iframe
+          src={`http://localhost:5000/${document.filepath}`}
+          title={document.filename}
+          style={{ width: "100%", height: "400px", border: "none" }}
+        />
+      );
+    } else {
+      return (
+        <Typography variant="body1" color="gray" textAlign="center">
+          Preview not available for this file type.
+        </Typography>
+      );
+    }
   };
 
   if (loading) {
@@ -134,9 +133,11 @@ const DocumentDetailPage = () => {
           justifyContent: "center",
           alignItems: "center",
           height: "100vh",
+          backgroundColor: "black",
+          color: "white",
         }}
       >
-        <CircularProgress />
+        <CircularProgress sx={{ color: "white" }} />
       </Box>
     );
   }
@@ -149,53 +150,38 @@ const DocumentDetailPage = () => {
     );
   }
 
-  const renderFilePreview = () => {
-    if (document.mimetype.startsWith("image")) {
-      return (
-        <img
-          src={`http://localhost:5000/${document.filepath}`}
-          alt={document.filename}
-          style={{ maxWidth: "100%", maxHeight: "400px", borderRadius: "8px" }}
-        />
-      );
-    } else if (document.mimetype === "application/pdf") {
-      return (
-        <iframe
-          src={`http://localhost:5000/${document.filepath}`}
-          title={document.filename}
-          style={{ width: "100%", height: "400px", border: "none" }}
-        />
-      );
-    } else {
-      return <Typography>Preview not available for this file type.</Typography>;
-    }
-  };
-
   return (
     <div>
       <Navbar />
       <Box
         sx={{
           display: "flex",
-          flexDirection: "row",
+          flexDirection: "column",
           alignItems: "center",
-          justifyContent: "space-between",
+          justifyContent: "flex-start",
           padding: "20px",
-          backgroundColor: "#D7F2BA", // Tea Green
+          backgroundColor: "white",
           minHeight: "100vh",
         }}
       >
         <Paper
           elevation={3}
           sx={{
+            width: "100%",
+            maxWidth: "800px",
             padding: "30px",
-            width: "50%",
-            backgroundColor: "#BDE4A8", // Celadon
+            border: "2px solid black",
+            borderRadius: "10px",
           }}
         >
-          <Typography variant="h4" gutterBottom textAlign="center">
+          <Typography
+            variant="h4"
+            textAlign="center"
+            sx={{ fontWeight: "bold", marginBottom: "20px" }}
+          >
             Document Details
           </Typography>
+          <Divider sx={{ marginBottom: "20px" }} />
           <Typography variant="body1" gutterBottom>
             <strong>Name:</strong> {document.name}
           </Typography>
@@ -206,7 +192,7 @@ const DocumentDetailPage = () => {
             <strong>Institution:</strong> {document.institution}
           </Typography>
           <Typography variant="body1" gutterBottom>
-            <strong>CredentialID:</strong> {document.credentialID}
+            <strong>Credential ID:</strong> {document.credentialID}
           </Typography>
           <Typography variant="body1" gutterBottom>
             <strong>Credential Type:</strong> {document.credentialType}
@@ -215,7 +201,7 @@ const DocumentDetailPage = () => {
             <strong>Grade:</strong> {document.grade}
           </Typography>
           <Typography variant="body1" gutterBottom>
-            <strong>User Public Key:</strong> {document.publicKey}
+            <strong>Public Key:</strong> {document.publicKey}
           </Typography>
           <Typography variant="body1" gutterBottom>
             <strong>Filename:</strong> {document.filename}
@@ -235,10 +221,13 @@ const DocumentDetailPage = () => {
                 disabled={submitting}
                 sx={{
                   marginTop: "20px",
-                  backgroundColor: "#79B4A9", // Cambridge Blue
-                  color: "#fff",
+                  backgroundColor: "black",
+                  color: "white",
+                  borderRadius: "10px",
                   "&:hover": {
-                    backgroundColor: "#676F54", // Reseda Green
+                    backgroundColor: "white",
+                    color: "black",
+                    border: "2px solid black",
                   },
                 }}
               >
@@ -252,10 +241,13 @@ const DocumentDetailPage = () => {
               disabled={generating}
               sx={{
                 marginTop: "20px",
-                backgroundColor: "#79B4A9", // Cambridge Blue
-                color: "#fff",
+                backgroundColor: "black",
+                color: "white",
+                borderRadius: "10px",
                 "&:hover": {
-                  backgroundColor: "#676F54", // Reseda Green
+                  backgroundColor: "white",
+                  color: "black",
+                  border: "2px solid black",
                 },
               }}
             >
@@ -263,13 +255,11 @@ const DocumentDetailPage = () => {
             </Button>
           )}
         </Paper>
-
         <Box
           sx={{
-            width: "40%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
+            width: "100%",
+            maxWidth: "800px",
+            marginTop: "20px",
           }}
         >
           {renderFilePreview()}

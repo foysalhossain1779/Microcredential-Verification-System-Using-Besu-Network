@@ -6,8 +6,6 @@ import {
   Paper,
   Avatar,
   Button,
-  AppBar,
-  Toolbar,
   Grid,
   CircularProgress,
 } from "@mui/material";
@@ -17,9 +15,9 @@ import Navbar from "../NavbarStudent";
 
 const DashboardPage = () => {
   const navigate = useNavigate();
-  const { user } = useContext(UserContext); // Access user from context
-  const [certificates, setCertificates] = useState([]); // Dynamic certificates
-  const [loading, setLoading] = useState(true); // Loading state
+  const { user } = useContext(UserContext);
+  const [certificates, setCertificates] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchCertificates = async () => {
@@ -30,15 +28,14 @@ const DashboardPage = () => {
           return;
         }
 
-        // Fetch tokens using the user's public key
         const response = await axios.get(
-          `http://localhost:5000/api/tokens?publicKey=${user.publicKey}`
+          `http://localhost:5000/api/tokens/recipient?publicKey=${user.publicKey}`
         );
-        setCertificates(response.data); // Set fetched tokens as certificates
+        setCertificates(response.data);
       } catch (error) {
         console.error("Error fetching certificates:", error);
       } finally {
-        setLoading(false);
+        setTimeout(() => setLoading(false), 800);
       }
     };
 
@@ -67,55 +64,59 @@ const DashboardPage = () => {
           justifyContent: "center",
           alignItems: "center",
           height: "100vh",
+          backgroundColor: "black",
+          color: "white",
+          fontFamily: "Poppins, sans-serif",
+          transition: "opacity 0.5s ease-in-out",
         }}
       >
-        <CircularProgress />
+        <CircularProgress sx={{ color: "white" }} />
       </Box>
     );
   }
 
   return (
-    <div>
+    <div style={{ fontFamily: "Poppins, sans-serif" }}>
       <Navbar />
       <Box
         sx={{
-          backgroundColor: "#D7F2BA", // Tea Green
+          backgroundColor: "white",
           minHeight: "100vh",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          padding: "0px",
+          padding: "20px",
         }}
       >
         <Paper
           elevation={3}
           sx={{
-            width: "100%",
+            width: "90%",
             maxWidth: "800px",
-            padding: "30px",
-            backgroundColor: "#BDE4A8", // Celadon
-            marginTop: "20px",
+            padding: "40px",
+            backgroundColor: "white",
             borderRadius: "10px",
+            border: "2px solid black",
           }}
         >
           <Typography
-            variant="h4"
+            variant="h3"
             gutterBottom
             textAlign="center"
-            sx={{ fontWeight: "bold", color: "#676F54" }}
+            sx={{ fontWeight: "bold", color: "black" }}
           >
             My Profile
           </Typography>
 
           <Box
-            sx={{ display: "flex", alignItems: "center", marginBottom: "20px" }}
+            sx={{ display: "flex", alignItems: "center", marginBottom: "30px" }}
           >
             <Avatar
               sx={{
-                width: 80,
-                height: 80,
+                width: 100,
+                height: 100,
                 marginRight: "20px",
-                backgroundColor: "#9CC69B",
+                backgroundColor: "black",
               }}
             />
             <Box>
@@ -140,10 +141,10 @@ const DashboardPage = () => {
           </Box>
 
           <Typography
-            variant="h5"
+            variant="h4"
             gutterBottom
             textAlign="center"
-            sx={{ color: "#676F54" }}
+            sx={{ color: "black" }}
           >
             Certificates
           </Typography>
@@ -157,11 +158,12 @@ const DashboardPage = () => {
                     sx={{
                       padding: "20px",
                       borderRadius: "10px",
-                      backgroundColor: "#79B4A9", // Cambridge Blue
-                      color: "#fff",
+                      backgroundColor: "#f9f9f9",
+                      color: "black",
+                      border: "2px solid black",
                     }}
                   >
-                    <Typography variant="h6" gutterBottom>
+                    <Typography variant="h5" gutterBottom>
                       {cert.credentialTitle}
                     </Typography>
                     <Typography>Token ID: {cert.tokenId}</Typography>
@@ -172,10 +174,14 @@ const DashboardPage = () => {
                       variant="contained"
                       onClick={() => handleView(cert)}
                       sx={{
-                        marginTop: "10px",
-                        backgroundColor: "#676F54", // Reseda Green
+                        marginTop: "15px",
+                        backgroundColor: "black",
+                        color: "white",
+                        border: "2px solid black",
+                        borderRadius: "10px",
                         "&:hover": {
-                          backgroundColor: "#9CC69B",
+                          backgroundColor: "white",
+                          color: "black",
                         },
                       }}
                     >
@@ -185,11 +191,7 @@ const DashboardPage = () => {
                 </Grid>
               ))
             ) : (
-              <Typography
-                variant="body1"
-                color="textSecondary"
-                textAlign="center"
-              >
+              <Typography variant="body1" color="black" textAlign="center">
                 No certificates available.
               </Typography>
             )}
@@ -197,28 +199,27 @@ const DashboardPage = () => {
 
           <Box
             sx={{
-              marginTop: "40px",
+              marginTop: "50px",
               padding: "20px",
-              backgroundColor: "#BDE4A8", // Celadon
+              backgroundColor: "white",
               borderRadius: "10px",
+              border: "2px solid black",
               textAlign: "center",
+              display: "flex",
+              justifyContent: "space-evenly",
             }}
           >
-            <Typography variant="h5" gutterBottom>
-              Request to Store Academic Certificate
-            </Typography>
-            <Typography>
-              Store your academic certificate on the blockchain for secure and
-              verifiable credentials.
-            </Typography>
             <Button
               variant="contained"
               onClick={handleCertificateRequest}
               sx={{
-                marginTop: "20px",
-                backgroundColor: "#676F54", // Reseda Green
+                backgroundColor: "black",
+                color: "white",
+                border: "2px solid black",
+                borderRadius: "10px",
                 "&:hover": {
-                  backgroundColor: "#79B4A9", // Cambridge Blue
+                  backgroundColor: "white",
+                  color: "black",
                 },
               }}
             >
@@ -228,10 +229,13 @@ const DashboardPage = () => {
               variant="contained"
               onClick={handleExemption}
               sx={{
-                marginTop: "20px",
-                backgroundColor: "#676F54", // Reseda Green
+                backgroundColor: "black",
+                color: "white",
+                border: "2px solid black",
+                borderRadius: "10px",
                 "&:hover": {
-                  backgroundColor: "#79B4A9", // Cambridge Blue
+                  backgroundColor: "white",
+                  color: "black",
                 },
               }}
             >

@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import { UserContext } from "../contexts/UserContext";
 import { useMetaMask } from "../contexts/MetaMaskContext";
+import Navbar from "./Navbar";
 
 const IssuedCredentialsPage = () => {
   const { user } = useContext(UserContext); // Access issuer public key from context
@@ -23,7 +24,6 @@ const IssuedCredentialsPage = () => {
   const [message, setMessage] = useState("");
   const [selectedTokenDetails, setSelectedTokenDetails] = useState(null);
 
-  // Fetch issued tokens on component load
   useEffect(() => {
     const fetchIssuedTokens = async () => {
       if (!user?.publicKey) return;
@@ -45,7 +45,6 @@ const IssuedCredentialsPage = () => {
     fetchIssuedTokens();
   }, [user]);
 
-  // Handle revoke token
   const handleRevoke = async (tokenId) => {
     if (!contract) return;
 
@@ -64,7 +63,6 @@ const IssuedCredentialsPage = () => {
     }
   };
 
-  // Handle view token details
   const handleViewDetails = async (tokenId) => {
     if (!contract) return;
 
@@ -93,118 +91,166 @@ const IssuedCredentialsPage = () => {
   };
 
   return (
-    <Box
-      sx={{
-        backgroundColor: "#D7F2BA", // Tea Green
-        minHeight: "100vh",
-        padding: "20px",
-      }}
-    >
-      <Typography
-        variant="h4"
-        textAlign="center"
-        sx={{ fontWeight: "bold", marginBottom: "20px", color: "#676F54" }}
+    <div>
+      <Navbar />
+      <Box
+        sx={{
+          backgroundColor: "white",
+          fontFamily: "Poppins, sans-serif",
+          minHeight: "100vh",
+          padding: "30px",
+        }}
       >
-        Issued Credentials
-      </Typography>
-      <Paper elevation={3} sx={{ padding: "20px", backgroundColor: "#fff" }}>
-        {loading && (
-          <Box
-            sx={{ display: "flex", justifyContent: "center", margin: "20px" }}
-          >
-            <CircularProgress />
-          </Box>
-        )}
-        {!loading && issuedTokens.length === 0 && (
-          <Typography textAlign="center" sx={{ color: "#d32f2f" }}>
-            No credentials issued yet.
-          </Typography>
-        )}
-        {issuedTokens.length > 0 && (
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Token ID</TableCell>
-                  <TableCell>Recipient Public Key</TableCell>
-                  <TableCell>Credential Title</TableCell>
-                  <TableCell>Actions</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {issuedTokens.map((token) => (
-                  <TableRow key={token.tokenId}>
-                    <TableCell>{token.tokenId}</TableCell>
-                    <TableCell>{token.recipientPublicKey}</TableCell>
-                    <TableCell>{token.credentialTitle}</TableCell>
-                    <TableCell>
-                      <Button
-                        variant="contained"
-                        sx={{
-                          backgroundColor: "#1976d2",
-                          color: "#fff",
-                          marginRight: "10px",
-                        }}
-                        onClick={() => handleViewDetails(token.tokenId)}
-                      >
-                        View
-                      </Button>
-                      <Button
-                        variant="contained"
-                        sx={{
-                          backgroundColor: "#d32f2f",
-                          color: "#fff",
-                        }}
-                        onClick={() => handleRevoke(token.tokenId)}
-                      >
-                        Revoke
-                      </Button>
+        <Typography
+          variant="h4"
+          textAlign="center"
+          sx={{ fontWeight: "bold", marginBottom: "20px", color: "black" }}
+        >
+          Issued Credentials
+        </Typography>
+        <Paper
+          elevation={3}
+          sx={{
+            padding: "20px",
+            border: "2px solid black",
+            borderRadius: "10px",
+            maxWidth: "1000px",
+            margin: "0 auto",
+          }}
+        >
+          {loading && (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                margin: "20px 0",
+              }}
+            >
+              <CircularProgress />
+            </Box>
+          )}
+          {!loading && issuedTokens.length === 0 && (
+            <Typography
+              textAlign="center"
+              sx={{ color: "red", fontWeight: "bold" }}
+            >
+              No credentials issued yet.
+            </Typography>
+          )}
+          {issuedTokens.length > 0 && (
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: "bold" }}>Token ID</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>
+                      Recipient Public Key
                     </TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>
+                      Credential Title
+                    </TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>Actions</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        )}
-        {message && (
-          <Typography
+                </TableHead>
+                <TableBody>
+                  {issuedTokens.map((token) => (
+                    <TableRow key={token.tokenId}>
+                      <TableCell>{token.tokenId}</TableCell>
+                      <TableCell>{token.recipientPublicKey}</TableCell>
+                      <TableCell>{token.credentialTitle}</TableCell>
+                      <TableCell>
+                        <Button
+                          variant="contained"
+                          sx={{
+                            backgroundColor: "black",
+                            color: "white",
+                            borderRadius: "10px",
+                            textTransform: "none",
+                            marginRight: "10px",
+                            "&:hover": {
+                              backgroundColor: "white",
+                              color: "black",
+                              border: "2px solid black",
+                            },
+                          }}
+                          onClick={() => handleViewDetails(token.tokenId)}
+                        >
+                          View
+                        </Button>
+                        <Button
+                          variant="contained"
+                          sx={{
+                            backgroundColor: "red",
+                            color: "white",
+                            borderRadius: "10px",
+                            textTransform: "none",
+                            "&:hover": {
+                              backgroundColor: "#ffcccc",
+                              color: "black",
+                              border: "2px solid red",
+                            },
+                          }}
+                          onClick={() => handleRevoke(token.tokenId)}
+                        >
+                          Revoke
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
+          {message && (
+            <Typography
+              sx={{
+                marginTop: "20px",
+                color: message.includes("Failed") ? "red" : "green",
+                textAlign: "center",
+                fontWeight: "bold",
+              }}
+            >
+              {message}
+            </Typography>
+          )}
+        </Paper>
+
+        {selectedTokenDetails && (
+          <Box
             sx={{
-              marginTop: "20px",
-              color: message.includes("Failed") ? "red" : "green",
+              marginTop: "40px",
+              padding: "20px",
+              border: "2px solid black",
+              borderRadius: "10px",
+              maxWidth: "1000px",
+              margin: "0 auto",
             }}
           >
-            {message}
-          </Typography>
+            <Typography
+              variant="h5"
+              textAlign="center"
+              sx={{ fontWeight: "bold", marginBottom: "20px", color: "black" }}
+            >
+              Token Details
+            </Typography>
+            <TableContainer>
+              <Table>
+                <TableBody>
+                  {Object.entries(selectedTokenDetails).map(([key, value]) => (
+                    <TableRow key={key}>
+                      <TableCell sx={{ fontWeight: "bold" }}>
+                        {key.charAt(0).toUpperCase() + key.slice(1)}
+                      </TableCell>
+                      <TableCell>{value?.toString()}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
         )}
-      </Paper>
-
-      {/* Render selected token details in a table */}
-      {selectedTokenDetails && (
-        <Box sx={{ marginTop: "40px" }}>
-          <Typography
-            variant="h5"
-            textAlign="center"
-            sx={{ marginBottom: "20px", color: "#676F54" }}
-          >
-            Token Details
-          </Typography>
-          <TableContainer component={Paper}>
-            <Table>
-              <TableBody>
-                {Object.entries(selectedTokenDetails).map(([key, value]) => (
-                  <TableRow key={key}>
-                    <TableCell sx={{ fontWeight: "bold" }}>
-                      {key.charAt(0).toUpperCase() + key.slice(1)}
-                    </TableCell>
-                    <TableCell>{value?.toString()}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Box>
-      )}
-    </Box>
+      </Box>
+    </div>
   );
 };
 

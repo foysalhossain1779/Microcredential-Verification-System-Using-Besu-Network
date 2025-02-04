@@ -14,14 +14,13 @@ import { UserContext } from "../contexts/UserContext";
 import Navbar from "./NavbarStudent";
 
 const ExemptionRequestPage = () => {
-  const { user } = useContext(UserContext); // Access user context
+  const { user } = useContext(UserContext);
   const [courses, setCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState("");
   const [tokenIds, setTokenIds] = useState([""]);
   const [userTokens, setUserTokens] = useState([]);
   const [message, setMessage] = useState("");
 
-  // Fetch courses and user tokens on component load
   useEffect(() => {
     const fetchCourses = async () => {
       try {
@@ -39,7 +38,7 @@ const ExemptionRequestPage = () => {
       if (user?.publicKey) {
         try {
           const response = await axios.get(
-            `http://localhost:5000/api/tokens?publicKey=${user.publicKey}`
+            `http://localhost:5000/api/tokens/recipient?publicKey=${user.publicKey}`
           );
           setUserTokens(response.data);
         } catch (error) {
@@ -75,8 +74,8 @@ const ExemptionRequestPage = () => {
       }
 
       const exemptionRequest = {
-        studentName: user.name, // Dynamically set student name from context
-        studentPublicKey: user.publicKey, // Dynamically set publicKey
+        studentName: user.name,
+        studentPublicKey: user.publicKey,
         course: selectedCourse,
         tokenIds,
       };
@@ -97,7 +96,8 @@ const ExemptionRequestPage = () => {
       <Navbar />
       <Box
         sx={{
-          backgroundColor: "#D7F2BA", // Tea Green
+          fontFamily: "Poppins, sans-serif",
+          backgroundColor: "white",
           minHeight: "100vh",
           padding: "20px",
         }}
@@ -105,7 +105,12 @@ const ExemptionRequestPage = () => {
         <Typography
           variant="h4"
           textAlign="center"
-          sx={{ fontWeight: "bold", marginBottom: "20px", color: "#676F54" }}
+          sx={{
+            fontWeight: "bold",
+            marginBottom: "20px",
+            color: "black",
+            fontSize: "28px",
+          }}
         >
           Exemption Request Portal
         </Typography>
@@ -113,25 +118,36 @@ const ExemptionRequestPage = () => {
         <Paper
           elevation={3}
           sx={{
-            padding: "20px",
-            marginBottom: "30px",
-            backgroundColor: "#fff",
+            padding: "30px",
+            maxWidth: "800px",
+            margin: "0 auto",
+            border: "2px solid black",
+            borderRadius: "10px",
           }}
         >
           <Typography
             variant="h5"
-            sx={{ fontWeight: "bold", marginBottom: "20px" }}
+            sx={{
+              fontWeight: "bold",
+              marginBottom: "20px",
+              textAlign: "center",
+            }}
           >
             Submit Exemption Request
           </Typography>
           <TextField
             select
-            label="Course"
+            label="Select Course"
             value={selectedCourse}
             onChange={(e) => setSelectedCourse(e.target.value)}
             fullWidth
             required
-            sx={{ marginBottom: "15px" }}
+            sx={{
+              marginBottom: "20px",
+              "& .MuiInputBase-root": {
+                borderRadius: "10px",
+              },
+            }}
           >
             {courses.map((course, index) => (
               <MenuItem key={index} value={course}>
@@ -139,13 +155,14 @@ const ExemptionRequestPage = () => {
               </MenuItem>
             ))}
           </TextField>
+
           {tokenIds.map((value, index) => (
             <Box
               key={index}
               sx={{
                 display: "flex",
                 alignItems: "center",
-                marginBottom: "15px",
+                marginBottom: "20px",
               }}
             >
               <TextField
@@ -155,7 +172,12 @@ const ExemptionRequestPage = () => {
                 onChange={(e) => handleTokenChange(index, e.target.value)}
                 fullWidth
                 required
-                sx={{ marginRight: "10px" }}
+                sx={{
+                  marginRight: "10px",
+                  "& .MuiInputBase-root": {
+                    borderRadius: "10px",
+                  },
+                }}
               >
                 {userTokens.map((token, idx) => (
                   <MenuItem key={idx} value={token.tokenId}>
@@ -167,22 +189,40 @@ const ExemptionRequestPage = () => {
                 color="error"
                 onClick={() => handleRemoveToken(index)}
                 startIcon={<RemoveCircleOutlineIcon />}
+                sx={{
+                  textTransform: "none",
+                  fontWeight: "bold",
+                  "&:hover": {
+                    backgroundColor: "#ffcccc",
+                  },
+                }}
               >
                 Remove
               </Button>
             </Box>
           ))}
+
           <Box
             sx={{
               display: "flex",
               justifyContent: "space-between",
-              marginTop: "20px",
+              marginTop: "30px",
             }}
           >
             <Button
               variant="outlined"
               onClick={handleAddToken}
               startIcon={<AddCircleOutlineIcon />}
+              sx={{
+                fontWeight: "bold",
+                textTransform: "none",
+                borderRadius: "10px",
+                "&:hover": {
+                  backgroundColor: "black",
+                  color: "white",
+                  border: "2px solid black",
+                },
+              }}
             >
               Add Token
             </Button>
@@ -190,21 +230,29 @@ const ExemptionRequestPage = () => {
               variant="contained"
               onClick={handleSubmitRequest}
               sx={{
-                backgroundColor: "#1976d2",
-                color: "#fff",
+                backgroundColor: "black",
+                color: "white",
+                fontWeight: "bold",
+                borderRadius: "10px",
+                textTransform: "none",
                 "&:hover": {
-                  backgroundColor: "#1565c0",
+                  backgroundColor: "white",
+                  color: "black",
+                  border: "2px solid black",
                 },
               }}
             >
               Submit Request
             </Button>
           </Box>
+
           {message && (
             <Typography
               sx={{
                 color: message.includes("Failed") ? "red" : "green",
                 marginTop: "20px",
+                textAlign: "center",
+                fontWeight: "bold",
               }}
             >
               {message}

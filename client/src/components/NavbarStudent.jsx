@@ -11,8 +11,8 @@ const Navbar = () => {
   const [account, setAccount] = useState(null);
   const [isSnackbarOpen, setSnackbarOpen] = useState(false);
   const navigate = useNavigate();
-  //Function to connect to wallet
 
+  // Function to connect to wallet
   const connectWallet = async () => {
     if (window.ethereum) {
       try {
@@ -26,44 +26,66 @@ const Navbar = () => {
       }
     } else {
       alert(
-        "Metamask is not installed. Please install it to use this application"
+        "Metamask is not installed. Please install it to use this application."
       );
     }
   };
+
   return (
     <AppBar
       position="static"
       sx={{
-        backgroundColor: "#79B4A9", // Cambridge Blue
-        color: "#FFFFFF", // White text
+        backgroundColor: "#000", // Black background
+        boxShadow: "none",
+        padding: "10px 20px",
       }}
     >
       <Toolbar>
         <Typography
-          variant="h6"
+          variant="h5"
           component="div"
-          sx={{ flexGrow: 1, color: "#D7F2BA" }} // Tea Green for text
+          sx={{
+            flexGrow: 1,
+            color: "#fff", // White text
+            fontFamily: "Poppins, sans-serif",
+            fontWeight: "bold",
+          }}
         >
           Dr. FANS
         </Typography>
         <Button
           onClick={() => navigate("/dashboard")}
-          color="inherit"
-          sx={{ color: "#BDE4A8" }}
+          sx={{
+            color: "#fff", // White text
+            fontFamily: "Poppins, sans-serif",
+            textTransform: "none",
+            fontSize: "1rem",
+            marginRight: "10px",
+          }}
         >
           Home
         </Button>
         <Button
           onClick={() => navigate("*")}
-          color="inherit"
-          sx={{ color: "#BDE4A8" }}
+          sx={{
+            color: "#fff", // White text
+            fontFamily: "Poppins, sans-serif",
+            textTransform: "none",
+            fontSize: "1rem",
+            marginRight: "10px",
+          }}
         >
           Request Course Exemption
         </Button>
         <Button
           onClick={() => navigate("/verify")}
-          color="inherit"
-          sx={{ color: "#BDE4A8" }}
+          sx={{
+            color: "#fff", // White text
+            fontFamily: "Poppins, sans-serif",
+            textTransform: "none",
+            fontSize: "1rem",
+            marginRight: "10px",
+          }}
         >
           Get Token Information
         </Button>
@@ -72,9 +94,13 @@ const Navbar = () => {
           onClick={connectWallet}
           sx={{
             marginLeft: "20px",
-            backgroundColor: account ? "#9CC69B" : "#676F54", // Different color if connected
+            backgroundColor: account ? "#444" : "#000", // Black or darker gray when connected
+            color: "#fff",
+            fontFamily: "Poppins, sans-serif",
+            textTransform: "none",
+            fontSize: "1rem",
             "&:hover": {
-              backgroundColor: "#79B4A9",
+              backgroundColor: "#222", // Lighter black on hover
             },
           }}
         >
@@ -90,7 +116,11 @@ const Navbar = () => {
         <Alert
           onClose={() => setSnackbarOpen(false)}
           severity="success"
-          sx={{ width: "100%" }}
+          sx={{
+            width: "100%",
+            fontFamily: "Poppins, sans-serif",
+            fontSize: "0.9rem",
+          }}
         >
           MetaMask connected successfully to {account}.
         </Alert>
