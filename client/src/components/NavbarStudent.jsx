@@ -66,7 +66,7 @@ const Navbar = () => {
           Home
         </Button>
         <Button
-          onClick={() => navigate("*")}
+          onClick={() => navigate("/exempstat")}
           sx={{
             color: "#fff", // White text
             fontFamily: "Poppins, sans-serif",
@@ -75,7 +75,7 @@ const Navbar = () => {
             marginRight: "10px",
           }}
         >
-          Request Course Exemption
+          Show Exemption Status
         </Button>
         <Button
           onClick={() => navigate("/verify")}

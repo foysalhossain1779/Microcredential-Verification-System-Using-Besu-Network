@@ -63,7 +63,7 @@ const Navbar = () => {
         </Typography>
         <Box sx={{ display: "flex", alignItems: "center", gap: "15px" }}>
           <Button
-            onClick={() => navigate("/admin-dashboard")}
+            onClick={() => navigate("/Inst-admin-dashboard")}
             sx={{
               color: "white",
               textTransform: "none",
@@ -75,7 +75,7 @@ const Navbar = () => {
             Home
           </Button>
           <Button
-            onClick={() => navigate("/verify")}
+            onClick={() => navigate("/adminexemp")}
             sx={{
               color: "white",
               textTransform: "none",
@@ -84,10 +84,10 @@ const Navbar = () => {
               },
             }}
           >
-            Verify Tokens
+            Create Exemption Forms
           </Button>
           <Button
-            onClick={() => navigate("/viewAll")}
+            onClick={() => navigate("/adminrevexemp")}
             sx={{
               color: "white",
               textTransform: "none",
@@ -96,7 +96,7 @@ const Navbar = () => {
               },
             }}
           >
-            View All Documents
+            Review Exemption Requests
           </Button>
           <Button
             variant="contained"

@@ -9,7 +9,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { UserContext } from "../../contexts/UserContext";
-import Navbar from "../Navbar"; // Ensure there's a separate Navbar for Admin if required
+import Navbar from "../NavbarInst"; // Ensure there's a separate Navbar for Admin if required
 
 const InstDashboardPage = () => {
   const navigate = useNavigate();

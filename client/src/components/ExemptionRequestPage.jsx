@@ -6,6 +6,12 @@ import {
   Typography,
   Paper,
   MenuItem,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
 } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
@@ -20,6 +26,7 @@ const ExemptionRequestPage = () => {
   const [tokenIds, setTokenIds] = useState([""]);
   const [userTokens, setUserTokens] = useState([]);
   const [message, setMessage] = useState("");
+  const [exemptionRequirements, setExemptionRequirements] = useState([]);
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -50,6 +57,23 @@ const ExemptionRequestPage = () => {
     fetchCourses();
     fetchUserTokens();
   }, [user]);
+
+  useEffect(() => {
+    const fetchExemptionRequirements = async () => {
+      if (selectedCourse) {
+        try {
+          const response = await axios.get(
+            `http://localhost:5000/api/exemption-requirements?course=${selectedCourse}`
+          );
+          setExemptionRequirements(response.data);
+        } catch (error) {
+          console.error("Error fetching exemption requirements:", error);
+        }
+      }
+    };
+
+    fetchExemptionRequirements();
+  }, [selectedCourse]);
 
   const handleAddToken = () => {
     setTokenIds([...tokenIds, ""]);
@@ -84,7 +108,13 @@ const ExemptionRequestPage = () => {
         "http://localhost:5000/api/exemption-requests",
         exemptionRequest
       );
+      alert("Request Submitted Successfully!");
       setMessage(response.data.message || "Request submitted successfully!");
+
+      // Clear all fields
+      setSelectedCourse("");
+      setTokenIds([""]);
+      setMessage("");
     } catch (error) {
       console.error("Error submitting request:", error);
       setMessage("Failed to submit the request.");
@@ -202,6 +232,66 @@ const ExemptionRequestPage = () => {
             </Box>
           ))}
 
+          <Box sx={{ marginTop: "30px" }}>
+            {selectedCourse && exemptionRequirements.length > 0 && (
+              <>
+                <Typography
+                  variant="h6"
+                  sx={{ fontWeight: "bold", marginBottom: "10px" }}
+                >
+                  Exemption Requirements for {selectedCourse}
+                </Typography>
+                <TableContainer component={Paper}>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell sx={{ fontWeight: "bold" }}>
+                          Credential
+                        </TableCell>
+                        <TableCell sx={{ fontWeight: "bold" }}>
+                          Institution
+                        </TableCell>
+                        <TableCell sx={{ fontWeight: "bold" }}>
+                          Course URL
+                        </TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {exemptionRequirements
+                        .filter(
+                          (requirement) => requirement.course === selectedCourse
+                        ) // Filter for the selected course
+                        .flatMap((requirement) =>
+                          requirement.microCredentials
+                            .filter(
+                              (credential) =>
+                                credential.credential &&
+                                credential.institution &&
+                                credential.courseUrl
+                            ) // Ensure valid credentials
+                            .map((credential, idx) => (
+                              <TableRow key={idx}>
+                                <TableCell>{credential.credential}</TableCell>
+                                <TableCell>{credential.institution}</TableCell>
+                                <TableCell>
+                                  <a
+                                    href={credential.courseUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    View Course
+                                  </a>
+                                </TableCell>
+                              </TableRow>
+                            ))
+                        )}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </>
+            )}
+          </Box>
+
           <Box
             sx={{
               display: "flex",
@@ -213,51 +303,13 @@ const ExemptionRequestPage = () => {
               variant="outlined"
               onClick={handleAddToken}
               startIcon={<AddCircleOutlineIcon />}
-              sx={{
-                fontWeight: "bold",
-                textTransform: "none",
-                borderRadius: "10px",
-                "&:hover": {
-                  backgroundColor: "black",
-                  color: "white",
-                  border: "2px solid black",
-                },
-              }}
             >
               Add Token
             </Button>
-            <Button
-              variant="contained"
-              onClick={handleSubmitRequest}
-              sx={{
-                backgroundColor: "black",
-                color: "white",
-                fontWeight: "bold",
-                borderRadius: "10px",
-                textTransform: "none",
-                "&:hover": {
-                  backgroundColor: "white",
-                  color: "black",
-                  border: "2px solid black",
-                },
-              }}
-            >
+            <Button variant="contained" onClick={handleSubmitRequest}>
               Submit Request
             </Button>
           </Box>
-
-          {message && (
-            <Typography
-              sx={{
-                color: message.includes("Failed") ? "red" : "green",
-                marginTop: "20px",
-                textAlign: "center",
-                fontWeight: "bold",
-              }}
-            >
-              {message}
-            </Typography>
-          )}
         </Paper>
       </Box>
     </div>

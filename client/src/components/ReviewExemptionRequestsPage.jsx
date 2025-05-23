@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { useMetaMask } from "../contexts/MetaMaskContext";
-import Navbar from "./Navbar";
+import Navbar from "./NavbarInst";
 
 const ReviewExemptionRequestsPage = () => {
   const { contract } = useMetaMask(); // Access contract from MetaMask context

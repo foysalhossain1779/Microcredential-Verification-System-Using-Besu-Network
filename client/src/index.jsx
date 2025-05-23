@@ -22,6 +22,7 @@ import ExemptionRequestPage from "./components/ExemptionRequestPage";
 import ReviewExemptionRequestsPage from "./components/ReviewExemptionRequestsPage";
 import InstDashboardPage from "./components/LoginPages/InstDashboardPage";
 import IssuedCredentialsPage from "./components/IssuedCredentialsPage";
+import ExemptionStatusPage from "./components/ExemptionStatusPage";
 // import ImportTokenForm from "./components/ImportTokenForm";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -49,6 +50,7 @@ root.render(
             //change here ; Document Upload
             <Route path="/DocUp" element={<DocumentUpload />} />
             <Route path="/viewAll" element={<DocumentsListPage />} />
+            <Route path="/exempstat" element={<ExemptionStatusPage />} />
             <Route path="/reqexemp" element={<ExemptionRequestPage />} />
             <Route path="/document/:id" element={<DocumentDetailPage />} />
             <Route path="/adminexemp" element={<InstitutionExemptionPage />} />

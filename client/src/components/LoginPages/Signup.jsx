@@ -17,8 +17,8 @@ const Signup = () => {
     name: "",
     email: "",
     university: "",
-    userType: "", // New field for user type
-    publicKey: "", // New field for public key
+    userType: "",
+    publicKey: "",
     password: "",
     confirmPassword: "",
   });
@@ -32,7 +32,6 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const {
       id,
       name,
@@ -58,8 +57,7 @@ const Signup = () => {
       return;
     }
 
-    const idInt = parseInt(id, 10);
-    if (isNaN(idInt)) {
+    if (isNaN(parseInt(id, 10))) {
       setError("ID must be a valid integer.");
       return;
     }
@@ -69,21 +67,13 @@ const Signup = () => {
       return;
     }
 
-    setError(""); // Clear existing errors
+    setError("");
 
     try {
       const response = await fetch("http://localhost:5000/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          id: idInt,
-          name,
-          email,
-          university,
-          userType,
-          publicKey,
-          password,
-        }),
+        body: JSON.stringify(formData),
       });
 
       if (response.ok) {
@@ -101,17 +91,32 @@ const Signup = () => {
   return (
     <Box
       sx={{
+        fontFamily: "Poppins, sans-serif",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        height: "100vh",
-        backgroundColor: "#D7F2BA", // Tea Green
+        minHeight: "100vh",
+        backgroundColor: "white",
       }}
     >
-      <AppBar position="fixed" sx={{ backgroundColor: "#676F54" }}>
+      <AppBar
+        position="static"
+        sx={{
+          backgroundColor: "black",
+          boxShadow: "none",
+        }}
+      >
         <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
+          <Typography
+            variant="h6"
+            sx={{
+              flexGrow: 1,
+              fontWeight: "bold",
+              textAlign: "center",
+              fontSize: "1.5rem",
+            }}
+          >
             Dr. FANS
           </Typography>
         </Toolbar>
@@ -119,7 +124,7 @@ const Signup = () => {
 
       <Box
         sx={{
-          marginTop: "100px",
+          marginTop: "50px",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -128,17 +133,23 @@ const Signup = () => {
         <Paper
           elevation={3}
           sx={{
-            width: "400px",
-            padding: "30px",
-            backgroundColor: "#BDE4A8", // Celadon
+            width: "450px",
+            padding: "40px",
+            backgroundColor: "#f9f9f9", // Off-white background
             borderRadius: "10px",
+            border: "1px solid #e0e0e0",
           }}
         >
           <Typography
             variant="h4"
             gutterBottom
             textAlign="center"
-            sx={{ fontWeight: "bold", color: "#676F54" }}
+            sx={{
+              fontWeight: "bold",
+              color: "black",
+              fontSize: "1.8rem",
+              marginBottom: "20px",
+            }}
           >
             Sign Up
           </Typography>
@@ -147,7 +158,7 @@ const Signup = () => {
               <Typography
                 variant="body2"
                 color="error"
-                sx={{ marginBottom: "15px" }}
+                sx={{ marginBottom: "15px", fontSize: "0.9rem" }}
               >
                 {error}
               </Typography>
@@ -160,6 +171,11 @@ const Signup = () => {
               fullWidth
               required
               margin="normal"
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "8px",
+                },
+              }}
             />
             <TextField
               label="Name"
@@ -169,6 +185,11 @@ const Signup = () => {
               fullWidth
               required
               margin="normal"
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "8px",
+                },
+              }}
             />
             <TextField
               label="Email"
@@ -179,6 +200,11 @@ const Signup = () => {
               fullWidth
               required
               margin="normal"
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "8px",
+                },
+              }}
             />
             <TextField
               label="University"
@@ -188,6 +214,11 @@ const Signup = () => {
               fullWidth
               required
               margin="normal"
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "8px",
+                },
+              }}
             />
             <TextField
               select
@@ -198,6 +229,11 @@ const Signup = () => {
               fullWidth
               required
               margin="normal"
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "8px",
+                },
+              }}
             >
               <MenuItem value="Issuer">Issuer</MenuItem>
               <MenuItem value="Student">Student</MenuItem>
@@ -211,6 +247,11 @@ const Signup = () => {
               fullWidth
               required
               margin="normal"
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "8px",
+                },
+              }}
             />
             <TextField
               label="Password"
@@ -221,6 +262,11 @@ const Signup = () => {
               fullWidth
               required
               margin="normal"
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "8px",
+                },
+              }}
             />
             <TextField
               label="Confirm Password"
@@ -231,6 +277,11 @@ const Signup = () => {
               fullWidth
               required
               margin="normal"
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "8px",
+                },
+              }}
             />
             <Button
               type="submit"
@@ -238,10 +289,15 @@ const Signup = () => {
               fullWidth
               sx={{
                 marginTop: "20px",
-                backgroundColor: "#676F54", // Reseda Green
-                color: "#fff",
+                padding: "10px",
+                backgroundColor: "black",
+                color: "white",
+                fontWeight: "bold",
+                borderRadius: "8px",
                 "&:hover": {
-                  backgroundColor: "#79B4A9", // Cambridge Blue
+                  backgroundColor: "white",
+                  color: "black",
+                  border: "2px solid black",
                 },
               }}
             >

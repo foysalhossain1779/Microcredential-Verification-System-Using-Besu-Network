@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
   Box,
   TextField,
@@ -16,12 +16,16 @@ import {
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import axios from "axios";
-import Navbar from "./Navbar";
+import Navbar from "./NavbarInst";
+import { UserContext } from "../contexts/UserContext";
 
 const InstitutionExemptionPage = () => {
   const [course, setCourse] = useState("");
-  const [microCredentials, setMicroCredentials] = useState([""]);
+  const [microCredentials, setMicroCredentials] = useState([
+    { credential: "", institution: "", courseUrl: "" },
+  ]);
   const [exemptionRequests, setExemptionRequests] = useState([]);
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
     const fetchExemptionRequests = async () => {
@@ -39,7 +43,10 @@ const InstitutionExemptionPage = () => {
   }, []);
 
   const handleAddMicroCredential = () => {
-    setMicroCredentials([...microCredentials, ""]);
+    setMicroCredentials([
+      ...microCredentials,
+      { credential: "", institution: "", courseUrl: "" },
+    ]);
   };
 
   const handleRemoveMicroCredential = (index) => {
@@ -49,9 +56,9 @@ const InstitutionExemptionPage = () => {
     setMicroCredentials(updatedMicroCredentials);
   };
 
-  const handleMicroCredentialChange = (index, value) => {
+  const handleMicroCredentialChange = (index, field, value) => {
     const updatedMicroCredentials = [...microCredentials];
-    updatedMicroCredentials[index] = value;
+    updatedMicroCredentials[index][field] = value;
     setMicroCredentials(updatedMicroCredentials);
   };
 
@@ -62,14 +69,14 @@ const InstitutionExemptionPage = () => {
         {
           course,
           microCredentials,
-          institution: "Your Institution Name", // Replace with dynamic value
-          createdBy: "Your Public Key", // Replace with dynamic public key
+          institution: user.university, // Replace with dynamic value
+          createdBy: user.publicKey, // Replace with dynamic public key
         }
       );
 
       alert("Requirement posted successfully!");
       setCourse("");
-      setMicroCredentials([""]);
+      setMicroCredentials([{ credential: "", institution: "", courseUrl: "" }]);
     } catch (error) {
       console.error("Error posting requirement:", error);
       alert("Failed to post requirement.");
@@ -139,20 +146,60 @@ const InstitutionExemptionPage = () => {
               key={index}
               sx={{
                 display: "flex",
-                alignItems: "center",
+                flexDirection: "column",
+                gap: "10px",
                 marginBottom: "20px",
               }}
             >
               <TextField
                 label={`Micro-Credential ${index + 1}`}
-                value={value}
+                value={value.credential}
                 onChange={(e) =>
-                  handleMicroCredentialChange(index, e.target.value)
+                  handleMicroCredentialChange(
+                    index,
+                    "credential",
+                    e.target.value
+                  )
                 }
                 fullWidth
                 required
                 sx={{
-                  marginRight: "10px",
+                  "& .MuiInputBase-root": {
+                    borderRadius: "10px",
+                  },
+                }}
+              />
+              <TextField
+                label="Institution"
+                value={value.institution}
+                onChange={(e) =>
+                  handleMicroCredentialChange(
+                    index,
+                    "institution",
+                    e.target.value
+                  )
+                }
+                fullWidth
+                required
+                sx={{
+                  "& .MuiInputBase-root": {
+                    borderRadius: "10px",
+                  },
+                }}
+              />
+              <TextField
+                label="Course URL"
+                value={value.courseUrl}
+                onChange={(e) =>
+                  handleMicroCredentialChange(
+                    index,
+                    "courseUrl",
+                    e.target.value
+                  )
+                }
+                fullWidth
+                required
+                sx={{
                   "& .MuiInputBase-root": {
                     borderRadius: "10px",
                   },

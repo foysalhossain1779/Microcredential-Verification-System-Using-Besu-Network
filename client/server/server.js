@@ -73,12 +73,19 @@ const Token = mongoose.model("Token", TokenSchema);
 const User = mongoose.model("User", userSchema);
 
 // Exemption Schemas
+const MicroCredentialSchema = new mongoose.Schema({
+  credential: { type: String, required: true },
+  institution: { type: String, required: true },
+  courseUrl: { type: String, required: true },
+});
+
 const ExemptionRequirementSchema = new mongoose.Schema({
   course: { type: String, required: true },
-  microCredentials: [{ type: String, required: true }], // Array of required micro-credentials
+  microCredentials: [MicroCredentialSchema], // Array of objects
   institution: { type: String, required: true },
   createdBy: { type: String, required: true }, // Public key of the institution
 });
+
 const ExemptionRequirement = mongoose.model(
   "ExemptionRequirement",
   ExemptionRequirementSchema
@@ -139,8 +146,17 @@ app.post("/api/exemption-requirements", async (req, res) => {
   try {
     const { course, microCredentials, institution, createdBy } = req.body;
 
-    if (!course || !microCredentials || !institution || !createdBy) {
+    if (!course || !microCredentials?.length || !institution || !createdBy) {
       return res.status(400).json({ error: "All fields are required." });
+    }
+
+    // Validate microCredentials array
+    for (const mc of microCredentials) {
+      if (!mc.credential || !mc.institution || !mc.courseUrl) {
+        return res
+          .status(400)
+          .json({ error: "Invalid micro-credential data." });
+      }
     }
 
     const newRequirement = new ExemptionRequirement({
@@ -164,7 +180,9 @@ app.post("/api/exemption-requirements", async (req, res) => {
 // Retrieve Exemption Requirements
 app.get("/api/exemption-requirements", async (req, res) => {
   try {
-    const requirements = await ExemptionRequirement.find();
+    const { course } = req.query;
+    const query = course ? { course } : {};
+    const requirements = await ExemptionRequirement.find(query);
     res.status(200).json(requirements);
   } catch (err) {
     console.error("Error fetching exemption requirements:", err.message);
