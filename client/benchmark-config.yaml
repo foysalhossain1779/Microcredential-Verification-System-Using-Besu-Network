@@ -1,0 +1,76 @@
+# benchmark-config.yaml
+test:
+  name: Academic Credential Benchmark
+  description: Caliper benchmark for Hyperledger Besu academic credential verification.
+  workers:
+    type: local
+    number: 1 # Start with 1, increase later.
+
+  rounds:
+    - label: Deploy Smart Contract
+      description: Deploying the credential smart contract to the Besu network.
+      contractID: Token # <--- **UPDATED** to your actual contract name
+      txDuration: 10 # Seconds to wait for contract deployment confirmation
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 1 # Deploy once
+
+    - label: Issue Credentials
+      description: Testing the throughput of issuing new academic credentials.
+      contractID: Token # <--- **UPDATED**
+      # Specify the custom workload module and arguments for it
+      workload:
+        module: myWorkload.js # <--- Path to your custom workload module
+        arguments:
+          function: issueToken # <--- The function name for your workload module to call
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 10 # Target 10 transactions per second for issuing
+      txDuration: 120 # Run this phase for 120 seconds
+
+    - label: Verify Credentials (isTokenValid)
+      description: Testing the throughput of verifying existing academic credentials.
+      contractID: Token # <--- **UPDATED**
+      workload:
+        module: myWorkload.js # <--- Path to your custom workload module
+        arguments:
+          function: isTokenValid # <--- The function name for your workload module to call
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 20 # Target 20 transactions per second for verification (read-only)
+      txDuration: 120
+
+    - label: Get Token Details
+      description: Testing the throughput of retrieving full token details.
+      contractID: Token # <--- **UPDATED**
+      workload:
+        module: myWorkload.js
+        arguments:
+          function: getToken # <--- New round to test the `getToken` function
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 20 # Target 20 transactions per second for retrieval (read-only)
+      txDuration: 120
+
+    - label: Revoke Credentials
+      description: Testing the throughput of revoking academic credentials.
+      contractID: Token # <--- **UPDATED**
+      workload:
+        module: myWorkload.js # <--- Path to your custom workload module
+        arguments:
+          function: revokeToken # <--- The function name for your workload module to call
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 5 # Target 5 transactions per second for revoking
+      txDuration: 60
+
+monitor:
+  interval: 1
+  metrics:
+    - "System Metrics"
+    - "Besu"
