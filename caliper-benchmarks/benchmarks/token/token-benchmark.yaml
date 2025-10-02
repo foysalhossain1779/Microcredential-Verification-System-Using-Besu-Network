@@ -1,0 +1,24 @@
+test:
+  name: token-benchmark-get
+  description: Benchmark for the getToken function of the Token smart contract
+  workers:
+    type: local
+    number: 8
+  rounds:
+    - label: getToken
+      description: Test getting a token by its ID
+      txNumber: 1000
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 100
+      workload:
+        # This points to the new workload file you created
+        module: benchmarks/token/get-token-workload.js
+        # This passes the tokenId to the workload
+        arguments:
+          tokenId: "1WINu"
+
+monitor:
+  type:
+    - none

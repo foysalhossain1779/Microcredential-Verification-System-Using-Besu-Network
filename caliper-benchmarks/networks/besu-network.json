@@ -1,0 +1,349 @@
+{
+  "caliper": {
+    "blockchain": "ethereum"
+  },
+  "ethereum": {
+    "url": "ws://localhost:8556",
+    "contractDeployerAddress": "0xfe3b557e8fb62b89f4916b721be55ceb828dbd73",
+    "contractDeployerAddressPrivateKey": "0x8f2a55949038a9610f50fb23b5883af3b4ecb3c3bb792cbcefbd1542c692be63",
+    "contractDeployerAddressPassword": "",
+    "fromAddress": "0xfe3b557e8fb62b89f4916b721be55ceb828dbd73",
+    "fromAddressPrivateKey": "0x8f2a55949038a9610f50fb23b5883af3b4ecb3c3bb792cbcefbd1542c692be63",
+    "fromAddressPassword": "",
+    "transactionConfirmationBlocks": 1,
+    "contracts": {
+      "Token": {
+        "address": "0x42699A7612A82f1d9C36148af9C77354759b210b",
+        "gas": {
+          "issueToken": 450000,
+          "getToken": 100000
+        },
+        "abi": [
+          {
+            "inputs": [],
+            "stateMutability": "nonpayable",
+            "type": "constructor"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": false,
+                "internalType": "string",
+                "name": "tokenId",
+                "type": "string"
+              },
+              {
+                "indexed": false,
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+              },
+              {
+                "indexed": false,
+                "internalType": "string",
+                "name": "credentialTitle",
+                "type": "string"
+              },
+              {
+                "indexed": false,
+                "internalType": "string",
+                "name": "credentialID",
+                "type": "string"
+              }
+            ],
+            "name": "TokenIssued",
+            "type": "event"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": false,
+                "internalType": "string",
+                "name": "tokenId",
+                "type": "string"
+              }
+            ],
+            "name": "TokenRevoked",
+            "type": "event"
+          },
+          {
+            "inputs": [],
+            "name": "lastIssuedTokenId",
+            "outputs": [
+              {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function",
+            "constant": true
+          },
+          {
+            "inputs": [],
+            "name": "owner",
+            "outputs": [
+              {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function",
+            "constant": true
+          },
+          {
+            "inputs": [],
+            "name": "tokenCount",
+            "outputs": [
+              {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function",
+            "constant": true
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+              }
+            ],
+            "name": "tokens",
+            "outputs": [
+              {
+                "internalType": "string",
+                "name": "tokenId",
+                "type": "string"
+              },
+              {
+                "internalType": "address",
+                "name": "issuerPublicKey",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "recipientPublicKey",
+                "type": "address"
+              },
+              {
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "credentialID",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "credentialTitle",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "credentialType",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "grade",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "institution",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "ipfsHash",
+                "type": "string"
+              },
+              {
+                "internalType": "bool",
+                "name": "isRevoked",
+                "type": "bool"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function",
+            "constant": true
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "address",
+                "name": "_issuerPublicKey",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "_recipientPublicKey",
+                "type": "address"
+              },
+              {
+                "internalType": "string",
+                "name": "_name",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "_credentialID",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "_credentialTitle",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "_credentialType",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "_grade",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "_institution",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "_ipfsHash",
+                "type": "string"
+              }
+            ],
+            "name": "issueToken",
+            "outputs": [
+              {
+                "internalType": "string",
+                "name": "newTokenId",
+                "type": "string"
+              }
+            ],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "string",
+                "name": "_tokenId",
+                "type": "string"
+              }
+            ],
+            "name": "revokeToken",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "string",
+                "name": "_tokenId",
+                "type": "string"
+              }
+            ],
+            "name": "isTokenValid",
+            "outputs": [
+              {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function",
+            "constant": true
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "string",
+                "name": "_tokenId",
+                "type": "string"
+              }
+            ],
+            "name": "getToken",
+            "outputs": [
+              {
+                "internalType": "string",
+                "name": "tokenId",
+                "type": "string"
+              },
+              {
+                "internalType": "address",
+                "name": "issuerPublicKey",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "recipientPublicKey",
+                "type": "address"
+              },
+              {
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "credentialID",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "credentialTitle",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "credentialType",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "grade",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "institution",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "ipfsHash",
+                "type": "string"
+              },
+              {
+                "internalType": "bool",
+                "name": "isRevoked",
+                "type": "bool"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function",
+            "constant": true
+          }
+        ]
+      }
+    }
+  }
+}
