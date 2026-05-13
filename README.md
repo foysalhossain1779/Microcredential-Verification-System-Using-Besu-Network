@@ -1,3 +1,22 @@
+
+
+# Microcredential Verification System Using Hyperledger Besu 
+
+A blockchain-based framework for securely issuing, managing, and verifying credit-bearing academic microcredentials, enabling Recognition of Prior Learning (RPL) and Accreditation of Prior Learning (APL). 
+
+
+#Published Paper
+
+Tanim, Abrar Mahbub, Hossain, Md. Foysal, Saria, Humira, Mansoor, Nafees, Design and Development of a Blockchain-Enabled Decentralized Framework for Academic Microcredentials, IET Software, 2026, 7326873, 16 pages, 2026. https://doi.org/10.1049/sfw2/7326873 
+
+Open Access — Creative Commons Attribution License
+
+
+#Overview 
+
+Students submit credentials for institutional verification. Verified files are stored on IPFS and linked on-chain via a Solidity smart contract on a permissioned Hyperledger Besu network using QBFT consensus. A token is issued to the student's MetaMask wallet and presented to participating institutions to request course exemptions, while each institution retains its own assessment authority.
+
+
 # React Truffle Box
 
 This box comes with everything you need to start using Truffle to write, compile, test, and deploy smart contracts, and interact with them from a React app.
